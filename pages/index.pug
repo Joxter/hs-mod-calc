@@ -57,18 +57,23 @@ html(lang='en')
     .modal
       .modal-container
         .module-form
-          img(src="modules/emp.png", alt="module icon").module-form__icon
-          h2.module-form__header Module name
-          p.module-form__description Module description
-          label.module-form__select-label from
-            select(name="from")
-              option(value="1" label=1)
-              option(value="2" label=2)
-          label.module-form__select-label to
-            select(name="to")
-              option(value="1" label=1)
-              option(value="2" label=2)
-          .footer
+          .module-form__header
+            img(src="modules/emp.png", alt="module icon").module-form__icon
+            h2.module-form__title Red Star Life Extender
+          .module-form__selects
+            label.module-form__select-label current level:&nbsp;
+              select(name="from")
+                option(value="1" label=1)
+                option(value="2" label=2)
+            label.module-form__select-label target to:&nbsp;
+              select(name="to")
+                option(value="1" label=1)
+                option(value="2" label=2)
+          .module-form__buttons
             button.module-form__btn.module-form__btn--cancel Cancel
             button.module-form__btn.module-form__btn--ok Ok
+          .module-form__footer
+            p.module-form__description Module description
+            p.module-form__description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis nihil fugiat aut voluptates, placeat odit?
+            p.module-form__description Lorem ipsum dolor, sit amet consectetur adipisicing.
   script(src='script.js')

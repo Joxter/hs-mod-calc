@@ -25,6 +25,14 @@ Model.onChange(renderResult);
 Model.onChange(updateButtons);
 Model.setData(getInitCurrentModules());
 
+Modal.open({
+  moduleData: modulesData.barrage,
+  selected: {
+    from: 2,
+    to: 4
+  }
+});
+
 function getInitCurrentModules() {
   if (!location.search) {
     return [];
@@ -144,12 +152,12 @@ function initButtons(modulesDiv) {
             {
               module: moduleName,
               level: moduleLevel.from,
-                section: `current`
+              section: `current`
             },
             {
               module: moduleName,
               level: moduleLevel.to,
-                section: `target`
+              section: `target`
             }
           ]);
         }
