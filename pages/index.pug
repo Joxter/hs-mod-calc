@@ -16,64 +16,63 @@ html(lang='en')
     style
       include style.css
   body
-    header
-      p Result:&nbsp;
-        span.result
-      div.controls
-        button.save-btn Save current to URL
-        button.reset-btn Reset current
+    .container
+      .result
+        p Result:&nbsp;
+          span.result
+        div.controls
+          button.save-btn Save current to URL
+          button.reset-btn Reset current
 
-      div.mode-toggle
-        input(type="radio", name="mode" value="current" checked id="current-radio")
-        label(for="current-radio") current
-        input(type="radio", name="mode" value="target" id="target-radio")
-        label(for="target-radio") target
+        div.mode-toggle
+          input(type="radio", name="mode" value="current" checked id="current-radio")
+          label(for="current-radio") current
+          input(type="radio", name="mode" value="target" id="target-radio")
+          label(for="target-radio") target
+      header
+        h1 Module calculator
+        p.description SOme descpitrion
+      .modules
+        h2 Trade modules
+        section.modules-pack
+          each moduleData in tradeModules
+            +module(moduleData)
 
-    .modules
-      h2 Trade modules
-      section.modules-pack
-        each moduleData in tradeModules
-          +module(moduleData)
+        h2 Mining modules
+        section.modules-pack
+          each moduleData  in miningModules
+            +module(moduleData)
 
-      h2 Mining modules
-      section.modules-pack
-        each moduleData  in miningModules
-          +module(moduleData)
+        h2 Weapon modules
+        section.modules-pack
+          each moduleData  in weaponModules
+            +module(moduleData)
 
-      h2 Weapon modules
-      section.modules-pack
-        each moduleData  in weaponModules
-          +module(moduleData)
+        h2 Shield modules
+        section.modules-pack
+          each moduleData  in shieldModules
+            +module(moduleData)
 
-      h2 Shield modules
-      section.modules-pack
-        each moduleData  in shieldModules
-          +module(moduleData)
-
-      h2 Support modules
-      section.modules-pack
-        each moduleData  in supportModules
-          +module(moduleData)
-    .modal
-      .modal-container
-        .module-form
-          .module-form__header
-            img(src="modules/emp.png", alt="module icon").module-form__icon
-            h2.module-form__title Red Star Life Extender
-          .module-form__selects
-            label.module-form__select-label current level:&nbsp;
-              select(name="from")
-                option(value="1" label=1)
-                option(value="2" label=2)
-            label.module-form__select-label target to:&nbsp;
-              select(name="to")
-                option(value="1" label=1)
-                option(value="2" label=2)
-          .module-form__buttons
-            button.module-form__btn.module-form__btn--cancel Cancel
-            button.module-form__btn.module-form__btn--ok Ok
-          .module-form__footer
-            p.module-form__description Module description
-            p.module-form__description Lorem ipsum dolor, sit amet consectetur adipisicing elit. Blanditiis nihil fugiat aut voluptates, placeat odit?
-            p.module-form__description Lorem ipsum dolor, sit amet consectetur adipisicing.
+        h2 Support modules
+        section.modules-pack
+          each moduleData  in supportModules
+            +module(moduleData)
+      .modal
+        .modal-container
+          .module-form
+            .module-form__header
+              img(src="modules/emp.png", alt="module icon").module-form__icon
+              h2.module-form__title Red Star Life Extender
+            .module-form__selects
+              label.module-form__select-label Current level:&nbsp;
+                select(name="from")
+                  option(value="1" label=1)
+                  option(value="2" label=2)
+              label.module-form__select-label Target level:&nbsp;
+                select(name="to")
+                  option(value="1" label=1)
+                  option(value="2" label=2)
+            .module-form__buttons
+              button.module-form__btn.module-form__btn--cancel Cancel
+              button.module-form__btn.module-form__btn--ok Ok
   script(src='script.js')

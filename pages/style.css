@@ -3,12 +3,33 @@ body {
   margin: 0;
   padding: 0;
   height: 100%;
-  box-sizing: border-box;
+  font-family: Helvetica, sans-serif;
+  background-color: #101415;
+  color: #9fe5fb;
+}
 
-  font-family: Helvetica;
+* {
+  box-sizing: border-box;
 }
 
 header {
+  max-width: 400px;
+  padding: 0 10px;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  border-right: 1px solid #1a5061;
+  border-left: 1px solid #1a5061;
+}
+
+h1 {
+  margin-top: 0;
+  padding-top: 1em;
+}
+
+.result {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -17,10 +38,6 @@ header {
   z-index: 10;
   border-top: 1px solid #eee;
   padding: 10px;
-}
-
-header *:first-child {
-  margin-top: 0;
 }
 
 .controls {
@@ -40,13 +57,19 @@ header *:first-child {
   padding: 5px 15px 5px 0;
 }
 
+.description {
+  color: #d7d8da;
+  margin-bottom: 0;
+  padding-bottom: 1em;
+}
+
 .modules {
-  max-width: 400px;
-  margin: 0 auto 140px;
+  margin-bottom: 140px;
 }
 
 .modules h2 {
   padding-left: 10px;
+  font-weight: normal;
 }
 
 .modules-pack {
@@ -65,7 +88,7 @@ header *:first-child {
   height: 50px;
   margin: 0 auto;
   position: relative;
-  background: #fff;
+  background-color: transparent;
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
@@ -81,7 +104,7 @@ header *:first-child {
   position: absolute;
   bottom: -3px;
   z-index: 1;
-  background: #fff;
+  color: #9fe5fb;
   font-size: 10px;
   border-radius: 50%;
   min-width: 14px;
@@ -105,12 +128,10 @@ header *:first-child {
   right: 0;
   top: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.8);
   z-index: 20;
-
   overflow-x: hidden;
   overflow-y: auto;
-
   display: none;
 }
 
@@ -129,7 +150,6 @@ header *:first-child {
 .module-form__header {
   display: flex;
   align-items: center;
-  font-size: 16px;
 }
 
 .module-form__icon {
@@ -141,6 +161,7 @@ header *:first-child {
 .module-form__title {
   margin: 0;
   font-weight: normal;
+  font-size: 16px;
 }
 
 .module-form__selects {
@@ -151,12 +172,12 @@ header *:first-child {
   margin-top: 10px;
 }
 .module-form__select-label {
-  font-size: 18px;
+  font-size: 14px;
   display: block;
 }
 
 .module-form__select-label select {
-  font-size: 18px;
+  font-size: 14px;
   text-align: right;
   background-color: #d7d8da;
 }
@@ -168,10 +189,10 @@ header *:first-child {
 .module-form__btn {
   font-size: inherit;
   border: 0;
-  padding: 6px 23px;
+  padding: 5px 25px;
   display: inline-block;
   background-color: #9fe5fb;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 
 .module-form__btn--cancel {

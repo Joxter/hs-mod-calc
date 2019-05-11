@@ -25,13 +25,13 @@ Model.onChange(renderResult);
 Model.onChange(updateButtons);
 Model.setData(getInitCurrentModules());
 
-Modal.open({
-  moduleData: modulesData.barrage,
-  selected: {
-    from: 2,
-    to: 4
-  }
-});
+// Modal.open({
+//   moduleData: modulesData.barrage,
+//   selected: {
+//     from: 2,
+//     to: 4
+//   }
+// });
 
 function getInitCurrentModules() {
   if (!location.search) {
