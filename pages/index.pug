@@ -17,21 +17,16 @@ html(lang='en')
       include style.css
   body
     .container
-      .result
-        p Result:&nbsp;
-          span.result
-        div.controls
-          button.save-btn Save current to URL
-          button.reset-btn Reset current
-
-        div.mode-toggle
-          input(type="radio", name="mode" value="current" checked id="current-radio")
-          label(for="current-radio") current
-          input(type="radio", name="mode" value="target" id="target-radio")
-          label(for="target-radio") target
       header
         h1 Module calculator
-        p.description SOme descpitrion
+      div.result
+        p.result-credit Credit:&nbsp;
+          span.value
+        p.result-duration Period:&nbsp;
+          span.value
+        div.controls
+          button.save-btn.btn.btn--ok Save to URL
+          button.reset-btn.btn.btn--cancel Reset
       .modules
         h2 Trade modules
         section.modules-pack
@@ -57,22 +52,23 @@ html(lang='en')
         section.modules-pack
           each moduleData  in supportModules
             +module(moduleData)
-      .modal
-        .modal-container
-          .module-form
-            .module-form__header
-              img(src="modules/emp.png", alt="module icon").module-form__icon
-              h2.module-form__title Red Star Life Extender
-            .module-form__selects
-              label.module-form__select-label Current level:&nbsp;
-                select(name="from")
-                  option(value="1" label=1)
-                  option(value="2" label=2)
-              label.module-form__select-label Target level:&nbsp;
-                select(name="to")
-                  option(value="1" label=1)
-                  option(value="2" label=2)
-            .module-form__buttons
-              button.module-form__btn.module-form__btn--cancel Cancel
-              button.module-form__btn.module-form__btn--ok Ok
+        p.dev dev by Joxter
+    .modal
+      .modal-container
+        .module-form
+          .module-form__header
+            span.module-form__icon
+            h2.module-form__title -
+          .module-form__selects
+            label.module-form__select-label Current level:&nbsp;
+              select(name="from")
+                option(value="1" label=1)
+                option(value="2" label=2)
+            label.module-form__select-label Target level:&nbsp;
+              select(name="to")
+                option(value="1" label=1)
+                option(value="2" label=2)
+          .module-form__buttons
+            button.btn.btn--cancel Cancel
+            button.btn.btn--ok Ok
   script(src='script.js')

@@ -1,26 +1,31 @@
-const modal = document.querySelector(".modal");
-const okBtn = modal.querySelector(".module-form__btn--ok");
-const cancelBtn = modal.querySelector(".module-form__btn--cancel");
+const modal = document.querySelector('.modal');
 
-const fromSelect = modal.querySelector("select[name=from]");
-const toSelect = modal.querySelector("select[name=to]");
+const title = modal.querySelector('.module-form__title');
+const icon = modal.querySelector('.module-form__icon');
 
-modal.addEventListener("click", event => {
+const okBtn = modal.querySelector('.btn--ok');
+const cancelBtn = modal.querySelector('.btn--cancel');
+
+const fromSelect = modal.querySelector('select[name=from]');
+const toSelect = modal.querySelector('select[name=to]');
+
+modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     Modal.close();
   }
 });
 
 let okButtonHandler = null;
-okBtn.addEventListener("click", () => {
-  okButtonHandler && okButtonHandler({
+okBtn.addEventListener('click', () => {
+  okButtonHandler &&
+    okButtonHandler({
       from: fromSelect.value,
-      to: toSelect.value
-  });
+      to: toSelect.value,
+    });
   Modal.close();
 });
 
-cancelBtn.addEventListener("click", () => {
+cancelBtn.addEventListener('click', () => {
   Modal.close();
 });
 
@@ -32,26 +37,26 @@ function getOption(level, selected) {
 function setSelectData(moduleData, selected) {
   const levels = [...Array(moduleData.prices.length + 1).keys()];
 
-  fromSelect.innerHTML = levels
-    .map(level => getOption(level, level === selected.from))
-    .join(``);
+  fromSelect.innerHTML = levels.map((level) => getOption(level, level === selected.from)).join(``);
+  toSelect.innerHTML = levels.map((level) => getOption(level, level === selected.to)).join(``);
 
-  toSelect.innerHTML = levels
-    .map(level => getOption(level, level === selected.to))
-    .join(``);
+  title.innerHTML = moduleData.name || `-`;
+
+  const iconBG = document.querySelector(`[data-module-id="${moduleData.id}"]`).getAttribute('style');
+  icon.setAttribute('style', iconBG);
 }
 
 const Modal = {
   open({ moduleData, selected, onOk }) {
     setSelectData(moduleData, selected);
-    modal.style.display = "block";
+    modal.style.display = 'block';
     modal.scrollTop = 0;
 
     okButtonHandler = onOk;
   },
   close() {
-    modal.style.display = "";
-  }
+    modal.style.display = '';
+  },
 };
 
 export default Modal;

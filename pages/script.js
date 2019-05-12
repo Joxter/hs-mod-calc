@@ -1,75 +1,79 @@
-const modulesData = require("./moduleData").modulesData;
-const allModuleKeys = require("./moduleData").allModuleKeys;
-const parseModules = require("./urlModules").parseModules;
-const stringifyModules = require("./urlModules").stringifyModules;
-const parseQueryString = require("./urlModules").parseQueryString;
-const Model = require("./Model").default;
-const Modal = require("./Modal").default;
+const modulesData = require('./moduleData').modulesData;
+const allModuleKeys = require('./moduleData').allModuleKeys;
+const parseModules = require('./urlModules').parseModules;
+const stringifyModules = require('./urlModules').stringifyModules;
+const parseQueryString = require('./urlModules').parseQueryString;
+const Model = require('./Model').default;
+const Modal = require('./Modal').default;
 
-const modules = document.querySelector(".modules");
-const modeToggle = document.querySelector(".mode-toggle");
-const saveBtn = document.querySelector(".save-btn");
-const resetBtn = document.querySelector(".reset-btn");
-const URL_RAPAM = "cm";
+const modules = document.querySelector('.modules');
+const saveBtn = document.querySelector('.save-btn');
+const resetBtn = document.querySelector('.reset-btn');
+const resultCreditSpan = document.querySelector('.result-credit .value');
+const resultDurationSpan = document.querySelector('.result-duration .value');
 
-const UserSelect = {
-  mode: `current`
-};
+const CURRENT_URL_RAPAM = 'cm';
+const TARGET_URL_RAPAM = 'tm';
 
-initButtons(modules);
-initToggler(modeToggle);
+initModulesButtons(modules);
 initSaveButton(saveBtn);
 initResetButton(resetBtn);
 
 Model.onChange(renderResult);
 Model.onChange(updateButtons);
-Model.setData(getInitCurrentModules());
 
-// Modal.open({
-//   moduleData: modulesData.barrage,
-//   selected: {
-//     from: 2,
-//     to: 4
-//   }
-// });
+Model.setData(getInitModules());
+console.log(Model.data);
 
-function getInitCurrentModules() {
+function getInitModules() {
   if (!location.search) {
     return [];
   }
 
-  const moduleStr = parseQueryString(location.search.slice(1))[URL_RAPAM];
+  const currentModuleStr = parseQueryString(location.search.slice(1))[CURRENT_URL_RAPAM];
+  const targetModuleStr = parseQueryString(location.search.slice(1))[TARGET_URL_RAPAM];
 
-  if (!moduleStr) {
-    return [];
-  }
+  const currentModules = parseModules(allModuleKeys, currentModuleStr);
+  const targetModules = parseModules(allModuleKeys, targetModuleStr);
 
-  const modules = parseModules(allModuleKeys, moduleStr);
+  const modulesData = [];
 
-  const modulesData = Object.keys(modules)
-    .filter(moduleName => modules[moduleName])
-    .map(moduleName => {
-      return {
+  Object.keys(currentModules)
+    .filter((moduleName) => currentModules[moduleName])
+    .forEach((moduleName) => {
+      modulesData.push({
         module: moduleName,
-        level: modules[moduleName],
-        section: `current`
-      };
+        level: currentModules[moduleName],
+        section: `current`,
+      });
+    });
+
+  Object.keys(targetModules)
+    .filter((moduleName) => targetModules[moduleName])
+    .forEach((moduleName) => {
+      modulesData.push({
+        module: moduleName,
+        level: targetModules[moduleName],
+        section: `target`,
+      });
     });
 
   return modulesData;
 }
 
 function initSaveButton(button) {
-  button.addEventListener("click", () => {
-    const str = stringifyModules(allModuleKeys, Model.getSection(`current`));
-    const newUrl = `${location.pathname}?${URL_RAPAM}=${str}`;
+  button.addEventListener('click', () => {
+    const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
+    const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
 
-    window.history.pushState("", "", newUrl);
+    const newUrl = `${location.pathname}?${CURRENT_URL_RAPAM}=${currntStr}&${TARGET_URL_RAPAM}=${targetStr}`;
+
+    window.history.pushState('', '', newUrl);
   });
 }
 
 function initResetButton(button) {
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     Model.reset();
   });
 }
@@ -79,33 +83,25 @@ function getSumFirst(arr, n) {
 }
 
 function renderResult(newData, state) {
-  const result = document.querySelector(".result");
-
   let term = 0;
   let money = 0;
 
-  Object.keys(state.target).forEach(modName => {
-    const currentPrice = getSumFirst(
-      modulesData[modName].prices,
-      state.current[modName]
-    );
+  Object.keys(state.target).forEach((modName) => {
+    const currentPrice = getSumFirst(modulesData[modName].prices, state.current[modName]);
 
-    const targetPrice = getSumFirst(
-      modulesData[modName].prices,
-      state.target[modName]
-    );
+    const targetPrice = getSumFirst(modulesData[modName].prices, state.target[modName]);
 
     if (targetPrice > currentPrice) {
       money += targetPrice - currentPrice;
     }
 
     const currentTerm = getSumFirst(
-      modulesData[modName].term.map(termItem => parseTerm(termItem)),
+      modulesData[modName].term.map((termItem) => parseTerm(termItem)),
       state.current[modName]
     );
 
     const targetTerm = getSumFirst(
-      modulesData[modName].term.map(termItem => parseTerm(termItem)),
+      modulesData[modName].term.map((termItem) => parseTerm(termItem)),
       state.target[modName]
     );
 
@@ -117,7 +113,9 @@ function renderResult(newData, state) {
   const moneyPerDay = money && term ? Math.floor((money / term) * 24 * 60) : 0;
   const termString = stringifyTerm(term);
 
-  result.innerHTML = `term ${termString}, money ${money} (${moneyPerDay} money/day)`;
+  resultCreditSpan.innerHTML = money ? `${numberWithCommas(money)} (${numberWithCommas(moneyPerDay)} credit/day)` : `-`;
+
+  resultDurationSpan.innerHTML = termString || `-`;
 }
 
 function updateButtons(modulesData) {
@@ -131,8 +129,8 @@ function updateButtons(modulesData) {
   });
 }
 
-function initButtons(modulesDiv) {
-  modulesDiv.querySelectorAll("button").forEach(btn => {
+function initModulesButtons(modulesDiv) {
+  modulesDiv.querySelectorAll('button').forEach((btn) => {
     const moduleName = btn.dataset.moduleId;
 
     if (!modulesData[moduleName]) {
@@ -140,27 +138,27 @@ function initButtons(modulesDiv) {
       return;
     }
 
-    btn.addEventListener("click", () => {
+    btn.addEventListener('click', () => {
       Modal.open({
         moduleData: modulesData[moduleName],
         selected: {
           from: Model.getLevel({ section: `current`, module: moduleName }),
-          to: Model.getLevel({ section: `target`, module: moduleName })
+          to: Model.getLevel({ section: `target`, module: moduleName }),
         },
-        onOk: moduleLevel => {
+        onOk: (moduleLevel) => {
           Model.setData([
             {
               module: moduleName,
               level: moduleLevel.from,
-              section: `current`
+              section: `current`,
             },
             {
               module: moduleName,
               level: moduleLevel.to,
-              section: `target`
-            }
+              section: `target`,
+            },
           ]);
-        }
+        },
       });
     });
   });
@@ -189,31 +187,23 @@ function stringifyTerm(term /* 600 */) {
   const hours = Math.floor((term - days * 24 * 60) / 60);
   const mins = term - days * 24 * 60 - hours * 60;
 
-  let result = ``;
+  let result = [];
 
   if (days) {
-    result += days + `d`;
+    result.push(days + `d`);
   }
 
   if (hours) {
-    result += hours + `h`;
+    result.push(hours + `h`);
   }
 
   if (mins) {
-    result += mins + `m`;
+    result.push(mins + `m`);
   }
 
-  return result;
+  return result.join(` `);
 }
 
-function initToggler(elem) {
-  elem.addEventListener("change", event => {
-    UserSelect.mode = event.target.value;
-  });
-
-  const checkedElem = elem.querySelector("input:checked");
-
-  if (checkedElem) {
-    UserSelect.mode = checkedElem.value;
-  }
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

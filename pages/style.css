@@ -12,6 +12,10 @@ body {
   box-sizing: border-box;
 }
 
+p {
+  color: #d7d8da;
+}
+
 header {
   max-width: 400px;
   padding: 0 10px;
@@ -20,24 +24,21 @@ header {
 .container {
   max-width: 400px;
   margin: 0 auto;
-  border-right: 1px solid #1a5061;
-  border-left: 1px solid #1a5061;
+  background-color: #161b1d;
 }
 
 h1 {
   margin-top: 0;
   padding-top: 1em;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
 }
 
 .result {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  padding-bottom: 5px;
-  background-color: #fff;
-  z-index: 10;
-  border-top: 1px solid #eee;
-  padding: 10px;
+  padding: 0 10px;
 }
 
 .controls {
@@ -64,7 +65,7 @@ h1 {
 }
 
 .modules {
-  margin-bottom: 140px;
+  padding-bottom: 20px;
 }
 
 .modules h2 {
@@ -155,6 +156,7 @@ h1 {
 .module-form__icon {
   flex-shrink: 0;
   flex-basis: 64px;
+  height: 56px;
   margin-right: 10px;
 }
 
@@ -186,7 +188,7 @@ h1 {
   margin-top: 20px;
 }
 
-.module-form__btn {
+.btn {
   font-size: inherit;
   border: 0;
   padding: 5px 25px;
@@ -195,10 +197,14 @@ h1 {
   border-radius: 4px;
 }
 
-.module-form__btn--cancel {
+.btn--cancel {
   background-color: #ef6c8e;
 }
 
-.module-form__btn + .module-form__btn {
+.btn + .btn {
   margin-left: 10px;
+}
+
+.dev {
+  text-align: center;
 }
