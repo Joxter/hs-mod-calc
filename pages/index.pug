@@ -1,12 +1,12 @@
 mixin module(data)
-  - var bg = "background-image: url('../pages/modules/" + data.id + ".png')"
+  - var bg = "background-image: url('./modules/" + data.id + ".png')"
   div.modules-pack__item
     button.module(
       data-module-id=data.id,
       data-current-l=0,
       data-target-l=0,
-      style=bg
     )= data.name
+      span.module__icon(style=bg)
 
 doctype html
 html(lang='en')
