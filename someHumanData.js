@@ -2,7 +2,7 @@ var someHumanData = {
   // trade
   TransportCapacity: {
     pic: `cargoBayExtension.png`,
-    eng: `Cargo Bay Extension`
+    eng: `Cargo Bay Extension`,
   },
   ShipmentComputer: { pic: `shipmentComputer.png`, eng: `Shipment Computer` },
   Trader: { pic: `tradeBoost.png`, eng: `Trade Boost` },
@@ -16,19 +16,19 @@ var someHumanData = {
   Recall: { pic: `recall.png`, eng: `Recall` },
 
   // mining
-  MiningBoost: { pic: "iningBoost.png", eng: `Mining Boost` },
+  MiningBoost: { pic: 'iningBoost.png', eng: `Mining Boost` },
   MineralStorageCapacity: {
-    pic: "hydrogenBayExtension.png",
-    eng: `Hydrogen Bay Extension`
+    pic: 'hydrogenBayExtension.png',
+    eng: `Hydrogen Bay Extension`,
   },
-  Enrich: { pic: "enrich.png", eng: `Enrich` },
-  MassMining: { pic: "remoteMining.png", eng: `Remote Mining` },
-  HydrogenUpload: { pic: "hydrogenUpload.png", eng: `Hydrogen Upload` },
-  MiningUnity: { pic: "miningUnity.png", eng: `Mining Unity` },
-  Crunch: { pic: "crunch.png", eng: `Crunch` },
-  Genesis: { pic: "genesis.png", eng: `Genesis` },
-  MiningDrone: { pic: "miningDrone.png", eng: `Mining Drone` },
-  HydroRocket: { pic: "hydroRocket.png", eng: `Hydro Rocket` },
+  Enrich: { pic: 'enrich.png', eng: `Enrich` },
+  MassMining: { pic: 'remoteMining.png', eng: `Remote Mining` },
+  HydrogenUpload: { pic: 'hydrogenUpload.png', eng: `Hydrogen Upload` },
+  MiningUnity: { pic: 'miningUnity.png', eng: `Mining Unity` },
+  Crunch: { pic: 'crunch.png', eng: `Crunch` },
+  Genesis: { pic: 'genesis.png', eng: `Genesis` },
+  MiningDrone: { pic: 'miningDrone.png', eng: `Mining Drone` },
+  HydroRocket: { pic: 'hydroRocket.png', eng: `Hydro Rocket` },
 
   //  weapon
   WeakBattery: { pic: `weakBattery.png`, eng: `Weak Battery` },
@@ -53,7 +53,7 @@ var someHumanData = {
   Teleport: { pic: `teleport.png`, eng: `Teleport` },
   RedStarExtender: {
     pic: `redStarLifeExtender.png`,
-    eng: `Red Star Life Extender`
+    eng: `Red Star Life Extender`,
   },
   Repair: { pic: `remoteRepair.png`, eng: `Remote Repair` },
   TimeWarp: { pic: `timeWarp.png`, eng: `Time Warp` },
@@ -72,9 +72,80 @@ var someHumanData = {
   Leap: { pic: `leap.png`, eng: `Leap` },
   Bond: { pic: `bond.png`, eng: `Bond` },
   AlphaDrone: { pic: `alphaDrone.png`, eng: `Alpha Drone` },
-  OmegaRocket: { pic: `omegaRocket.png`, eng: `Omega Rocket` }
+  OmegaRocket: { pic: `omegaRocket.png`, eng: `Omega Rocket` },
+};
+
+var modulesByTypes = {
+  trade: [
+    'TransportCapacity',
+    'ShipmentComputer',
+    'Trader',
+    'Rush',
+    'TradeBurst',
+    'ShipmentDrone',
+    'Offload',
+    'ShipmentBeam',
+    'Entrust',
+    'Dispatch',
+    'Recall',
+  ],
+  mining: [
+    'MiningBoost',
+    'MineralStorageCapacity',
+    'Enrich',
+    'MassMining',
+    'HydrogenUpload',
+    'MiningUnity',
+    'Crunch',
+    'Genesis',
+    'HydroRocket',
+    'MiningDrone',
+  ],
+  support: [
+    'EMP',
+    'Teleport',
+    'RedStarExtender',
+    'Repair',
+    'TimeWarp',
+    'Unity',
+    'Sanctuary',
+    'Stealth',
+    'Fortify',
+    'Impulse',
+    'AlphaRocket',
+    'Salvage',
+    'Supress',
+    'Destiny',
+    'Barrier',
+    'Vengeance',
+    'DeltaRocket',
+    'Leap',
+    'Bond',
+    // 'AlphaDrone', // todo его нет!
+    'OmegaRocket',
+  ],
+  shield: [
+    'WeakShield',
+    'StandardShield',
+    'StrongShield',
+    'PassiveShield',
+    'MirrorShield',
+    'AreaShield',
+    'BlastShield',
+  ],
+  weapon: [
+    //
+    'WeakBattery',
+    'Battery',
+    'Laser',
+    'MassBattery',
+    'DualLaser',
+    'Barrage',
+    'DartLauncher',
+  ],
 };
 
 module.exports = {
-  someHumanData
+  someHumanData,
+  modulesByTypes,
 };

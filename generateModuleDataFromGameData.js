@@ -1,5 +1,6 @@
 var fs = require("fs");
 var someHumanData = require("./someHumanData").someHumanData;
+var modulesByTypes = require("./someHumanData").modulesByTypes;
 var csv2json = require("csv2json");
 
 fs.createReadStream("./raw_data/modules.csv")
@@ -25,7 +26,7 @@ function saveToFile(filePath, modulesData, moduleTypes) {
 
 var modulesData = ${JSON.stringify(modulesData, true, 2)}
 
-var modulesByTypes = ${JSON.stringify(moduleTypes, true, 2)}
+var modulesByTypes = ${JSON.stringify(modulesByTypes, true, 2)}
 
 const allModuleKeys = [
   ...modulesByTypes.trade,
@@ -82,6 +83,7 @@ function getModuleInfo(modulesData) {
     if (!modulesInfo[currentName]) {
       modulesInfo[currentName] = {
         eng: someHumanData[currentName].eng,
+        id: currentName,
         colNames: [`UnlockPrice`, `UnlockTime`],
         data: []
       };
