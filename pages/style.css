@@ -170,6 +170,9 @@ h3 {
   flex-basis: 64px;
   height: 56px;
   margin-right: 10px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .module-form__title {

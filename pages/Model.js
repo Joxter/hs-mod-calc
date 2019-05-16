@@ -1,7 +1,7 @@
 const Model = {
   data: {
     current: {},
-    target: {}
+    target: {},
   },
   changeCallbacks: [],
   onChange(fn) {
@@ -21,22 +21,21 @@ const Model = {
     console.log(this.data);
   },
   reset(section = `current`) {
-    const emptyData = Object.keys(this.data[section]).map(moduleName => {
+    const emptyData = Object.keys(this.data[section]).map((moduleName) => {
       return {
         module: moduleName,
         level: 0,
-        section
+        section,
       };
     });
 
     this.setData(emptyData);
   },
   emitCallbacks(newData) {
-    console.log({ newData });
-    this.changeCallbacks.forEach(callback => {
+    this.changeCallbacks.forEach((callback) => {
       callback(newData, this.data);
     });
-  }
+  },
 };
 
 export default Model;

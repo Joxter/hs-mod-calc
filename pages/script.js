@@ -21,9 +21,7 @@ initResetButton(resetBtn);
 
 Model.onChange(renderResult);
 Model.onChange(updateButtons);
-
 Model.setData(getInitModules());
-console.log(Model.data);
 
 function getInitModules() {
   if (!location.search) {
@@ -74,12 +72,21 @@ function initSaveButton(button) {
 
 function initResetButton(button) {
   button.addEventListener('click', () => {
-    Model.reset();
+    Model.reset(`current`);
+    Model.reset(`target`);
   });
 }
 
 function getSumFirst(arr, n) {
+  n = n || 0;
   return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
+}
+
+function getModulePrices(moduleData) {
+  return moduleData.data.map(([price, term]) => price);
+}
+function getModuleTerm(moduleData) {
+  return moduleData.data.map(([price, term]) => term);
 }
 
 function renderResult(newData, state) {
@@ -87,30 +94,22 @@ function renderResult(newData, state) {
   let money = 0;
 
   Object.keys(state.target).forEach((modName) => {
-    const currentPrice = getSumFirst(modulesData[modName].prices, state.current[modName]);
-
-    const targetPrice = getSumFirst(modulesData[modName].prices, state.target[modName]);
+    const currentPrice = getSumFirst(getModulePrices(modulesData[modName]), state.current[modName]);
+    const targetPrice = getSumFirst(getModulePrices(modulesData[modName]), state.target[modName]);
 
     if (targetPrice > currentPrice) {
       money += targetPrice - currentPrice;
     }
 
-    const currentTerm = getSumFirst(
-      modulesData[modName].term.map((termItem) => parseTerm(termItem)),
-      state.current[modName]
-    );
-
-    const targetTerm = getSumFirst(
-      modulesData[modName].term.map((termItem) => parseTerm(termItem)),
-      state.target[modName]
-    );
+    const currentTerm = getSumFirst(getModuleTerm(modulesData[modName]), state.current[modName]);
+    const targetTerm = getSumFirst(getModuleTerm(modulesData[modName]), state.target[modName]);
 
     if (targetTerm > currentTerm) {
       term += targetTerm - currentTerm;
     }
   });
 
-  const moneyPerDay = money && term ? Math.floor((money / term) * 24 * 60) : 0;
+  const moneyPerDay = money && term ? ((money / term) * 24 * 60 * 60).toFixed(0) : 0;
   const termString = stringifyTerm(term);
 
   resultCreditSpan.innerHTML = money ? `${numberWithCommas(money)} (${numberWithCommas(moneyPerDay)} credit/day)` : `-`;
@@ -164,28 +163,14 @@ function initModulesButtons(modulesDiv) {
   });
 }
 
-function parseTerm(term /* 4h / 2d / 5m */) {
-  try {
-    const [, number, period] = term.match(/(\d+)([hdm])/);
+function stringifyTerm(sec) {
+  const secInMin = 60;
+  const secInHour = 60 * secInMin;
+  const secInDay = 24 * secInHour;
 
-    if (period === `m`) {
-      return +number;
-    }
-    if (period === `h`) {
-      return +number * 60;
-    }
-    if (period === `d`) {
-      return +number * 60 * 24;
-    }
-  } catch (e) {
-    throw new Error(`Term must be like '4h' or '2d', not: ${term}`);
-  }
-}
-
-function stringifyTerm(term /* 600 */) {
-  const days = Math.floor(term / (24 * 60));
-  const hours = Math.floor((term - days * 24 * 60) / 60);
-  const mins = term - days * 24 * 60 - hours * 60;
+  const days = Math.floor(sec / secInDay);
+  const hours = Math.floor((sec - days * secInDay) / secInHour);
+  const mins = Math.floor((sec - days * secInDay - hours * secInHour) / secInMin);
 
   let result = [];
 

@@ -35,14 +35,15 @@ function getOption(level, selected) {
 }
 
 function setSelectData(moduleData, selected) {
-  const levels = [...Array(moduleData.prices.length + 1).keys()];
+  const levels = [...Array(moduleData.data.length + 1).keys()];
 
-  fromSelect.innerHTML = levels.map((level) => getOption(level, level === selected.from)).join(``);
-  toSelect.innerHTML = levels.map((level) => getOption(level, level === selected.to)).join(``);
+  fromSelect.innerHTML = levels.map((level) => getOption(level, level == selected.from)).join(``);
+  toSelect.innerHTML = levels.map((level) => getOption(level, level == selected.to)).join(``);
 
-  title.innerHTML = moduleData.name || `-`;
+  title.innerHTML = moduleData.eng || `-`;
 
-  const iconBG = document.querySelector(`[data-module-id="${moduleData.id}"]`).getAttribute('style');
+  // неприятный хак, но пока других идей нет
+  const iconBG = document.querySelector(`[data-module-id="${moduleData.id}"] .module__icon`).getAttribute('style');
   icon.setAttribute('style', iconBG);
 }
 
