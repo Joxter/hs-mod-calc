@@ -22,7 +22,7 @@ html(lang='en')
       div.result
         p.result-credit Credit:&nbsp;
           span.value
-        p.result-duration Period:&nbsp;
+        p.result-duration Duration:&nbsp;
           span.value
         div.controls
           button.save-btn.btn.btn--ok Save to URL
@@ -52,7 +52,10 @@ html(lang='en')
         section.modules-pack
           each moduleData  in supportModules
             +module(moduleData)
-        p.dev dev by Joxter
+        p.dev The data is from&nbsp;
+          a(href='http://www.hadesstar.info/', target='_blank') hadesstar.info
+        p.dev Developed by Joxter&nbsp;
+          a(href='https://t.me/joxter', target='_blank') telegram
     .modal
       .modal-container
         .module-form

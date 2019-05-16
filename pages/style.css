@@ -223,3 +223,7 @@ h3 {
 .dev {
   text-align: center;
 }
+
+.dev a {
+    color: #9fe5fb;
+}
