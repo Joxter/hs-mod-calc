@@ -118,7 +118,7 @@ var modulesByTypes = {
     'DeltaRocket',
     'Leap',
     'Bond',
-    // 'AlphaDrone', // todo его нет!
+    'AlphaDrone',
     'OmegaRocket',
   ],
   shield: [
