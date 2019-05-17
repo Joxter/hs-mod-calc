@@ -15,13 +15,17 @@ const resultDurationSpan = document.querySelector('.result-duration .value');
 const CURRENT_URL_RAPAM = 'cm';
 const TARGET_URL_RAPAM = 'tm';
 
-initModulesButtons(modules);
-initSaveButton(saveBtn);
-initResetButton(resetBtn);
+document.addEventListener('DOMContentLoaded', main);
 
-Model.onChange(renderResult);
-Model.onChange(updateButtons);
-Model.setData(getInitModules());
+function main() {
+  initModulesButtons(modules);
+  initSaveButton(saveBtn);
+  initResetButton(resetBtn);
+
+  Model.onChange(renderResult);
+  Model.onChange(updateButtons);
+  Model.setData(getInitModules());
+}
 
 function getInitModules() {
   if (!location.search) {

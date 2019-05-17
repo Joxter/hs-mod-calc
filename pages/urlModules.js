@@ -1,28 +1,18 @@
 export function parseModules(modules, url) {
   const userSelect = {};
 
-  url.split("").forEach((level, i) => {
-    if (level === "A") {
-      userSelect[modules[i]] = 10;
-    } else if (+level == level) {
-      userSelect[modules[i]] = +level;
-    }
+  modules.forEach((moduleName, i) => {
+    userSelect[moduleName] = +`0x${url[i]}` || 0;
   });
 
   return userSelect;
 }
 
 export function stringifyModules(modules, userSelect) {
-  let url = "";
+  let url = '';
 
   modules.forEach((moduleName, i) => {
-    if (userSelect[moduleName] == 10) {
-      url += "A";
-    } else if (userSelect[moduleName]) {
-      url += userSelect[moduleName];
-    } else {
-      url += "0";
-    }
+    url += (userSelect[moduleName] || 0).toString(16).toLocaleUpperCase();
   });
 
   return url;
@@ -30,11 +20,7 @@ export function stringifyModules(modules, userSelect) {
 
 export function getCookie(name) {
   const matches = document.cookie.match(
-    new RegExp(
-      "(?:^|; )" +
-        name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-        "=([^;]*)"
-    )
+    new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)')
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
@@ -42,7 +28,7 @@ export function getCookie(name) {
 export function setCookie(name, value, options = {}) {
   var expires = options.expires;
 
-  if (typeof expires == "number" && expires) {
+  if (typeof expires == 'number' && expires) {
     var d = new Date();
     d.setTime(d.getTime() + expires * 1000);
     expires = options.expires = d;
@@ -53,13 +39,13 @@ export function setCookie(name, value, options = {}) {
 
   value = encodeURIComponent(value);
 
-  var updatedCookie = name + "=" + value;
+  var updatedCookie = name + '=' + value;
 
   for (var propName in options) {
-    updatedCookie += "; " + propName;
+    updatedCookie += '; ' + propName;
     var propValue = options[propName];
     if (propValue !== true) {
-      updatedCookie += "=" + propValue;
+      updatedCookie += '=' + propValue;
     }
   }
 
@@ -67,17 +53,17 @@ export function setCookie(name, value, options = {}) {
 }
 
 export function deleteCookie(name) {
-  setCookie(name, "", {
-    expires: -1
+  setCookie(name, '', {
+    expires: -1,
   });
 }
 
 export function parseQueryString(query) {
-  var vars = query.split("&");
+  var vars = query.split('&');
   var params = {};
 
-  vars.forEach(variable => {
-    var [key, value] = variable.split("=");
+  vars.forEach((variable) => {
+    var [key, value] = variable.split('=');
 
     if (key) {
       if (value === undefined) {
