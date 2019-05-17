@@ -43,6 +43,9 @@ h3 {
 
 .controls {
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .reset-btn,
@@ -184,6 +187,7 @@ h3 {
 .module-form__select-label:not(:first-child) {
   margin-top: 10px;
 }
+
 .module-form__select-label {
   font-size: 14px;
   display: block;

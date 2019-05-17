@@ -1,3 +1,4 @@
+import { save, get } from './storage';
 const modulesData = require('./moduleData').modulesData;
 const allModuleKeys = require('./moduleData').allModuleKeys;
 const parseModules = require('./urlModules').parseModules;
@@ -9,8 +10,13 @@ const Modal = require('./Modal').default;
 const modules = document.querySelector('.modules');
 const saveBtn = document.querySelector('.save-btn');
 const resetBtn = document.querySelector('.reset-btn');
+
+const newSaveBtn = document.querySelector('.save-button--js');
+const newLoadBtn = document.querySelector('.save-button--js');
+
 const resultCreditSpan = document.querySelector('.result-credit .value');
 const resultDurationSpan = document.querySelector('.result-duration .value');
+const autosaveCheckBox = document.querySelector('.autosave--js');
 
 const CURRENT_URL_RAPAM = 'cm';
 const TARGET_URL_RAPAM = 'tm';
@@ -18,24 +24,60 @@ const TARGET_URL_RAPAM = 'tm';
 document.addEventListener('DOMContentLoaded', main);
 
 function main() {
+  initNewSaveButton(newSaveBtn);
+  initNewLoadButton(newLoadBtn);
+
   initModulesButtons(modules);
   initSaveButton(saveBtn);
   initResetButton(resetBtn);
 
+  ininAutosaveCB();
+
+  Model.onChange(autosavaModules);
   Model.onChange(renderResult);
   Model.onChange(updateButtons);
-  Model.setData(getInitModules());
+  Model.setData(getNewInitModules());
+}
 
-  console.log(`OK`);
+function ininAutosaveCB() {
+  autosaveCheckBox.addEventListener(`change`, () => autosavaModules());
+}
+
+function autosavaModules() {
+  if (autosaveCheckBox.checked) {
+    saveModules(allModuleKeys, Model);
+  }
+}
+
+function getNewInitModules() {
+  const moduleStrs = getModules();
+  const moduleData = transformSavedDataToModelData(moduleStrs);
+
+  return moduleData;
 }
 
 function getInitModules() {
-  if (!location.search) {
-    return [];
-  }
+  const moduleStrs = getModulesStrFromUrl(location.search);
+  const moduleData = transformSavedDataToModelData(moduleStrs);
 
-  const currentModuleStr = parseQueryString(location.search.slice(1))[CURRENT_URL_RAPAM];
-  const targetModuleStr = parseQueryString(location.search.slice(1))[TARGET_URL_RAPAM];
+  return moduleData;
+}
+
+function getModulesStrFromUrl(url) {
+  url = url || `?`;
+
+  const urlData = parseQueryString(url.slice(1));
+
+  const currentModuleStr = urlData[CURRENT_URL_RAPAM] || ``;
+  const targetModuleStr = urlData[TARGET_URL_RAPAM] || ``;
+
+  return {
+    currentModuleStr,
+    targetModuleStr,
+  };
+}
+
+function transformSavedDataToModelData({ currentModuleStr, targetModuleStr }) {
   const modulesData = [];
 
   if (currentModuleStr) {
@@ -69,11 +111,50 @@ function getInitModules() {
   return modulesData;
 }
 
+function saveModules(allModuleKeys, Model) {
+  const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
+  const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
+
+  save(CURRENT_URL_RAPAM, currntStr);
+  save(TARGET_URL_RAPAM, targetStr);
+}
+
+function getModules() {
+  const currentModuleStr = get(CURRENT_URL_RAPAM);
+  const targetModuleStr = get(TARGET_URL_RAPAM);
+
+  return {
+    currentModuleStr,
+    targetModuleStr,
+  };
+}
+
+function initNewSaveButton(button) {
+  button.addEventListener(`click`, () => {
+    saveModules(allModuleKeys, Model);
+  });
+}
+
+function initNewLoadButton(button) {
+  button.addEventListener(`click`, () => {
+    loadModulesFromStorage();
+  });
+}
+
+function loadModulesFromStorage() {
+  const moduleStrs = getModules();
+  const moduleData = transformSavedDataToModelData(moduleStrs);
+
+  Model.setData(moduleData);
+}
+
 function initSaveButton(button) {
   button.addEventListener('click', () => {
     const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
     const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
 
+    save(CURRENT_URL_RAPAM, currntStr);
+    save(TARGET_URL_RAPAM, targetStr);
     const newUrl = `${location.pathname}?${CURRENT_URL_RAPAM}=${currntStr}&${TARGET_URL_RAPAM}=${targetStr}`;
 
     window.history.pushState('', '', newUrl);

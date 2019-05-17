@@ -26,8 +26,24 @@ html(lang='en')
         p.result-duration Duration:&nbsp;
           span.value
         div.controls
-          button.save-btn.btn.btn--ok Save to URL
-          button.reset-btn.btn.btn--cancel Reset
+          p Save
+          button.save-button--js save modules
+          label
+            input(type='checkbox', name='current').autosave--js
+            | Autosave
+          button.load-button--js load saved
+          p Share
+          label
+            input(type='checkbox', name='current')
+            | Current
+          label
+            input(type='checkbox', name='target')
+            | Target
+        a.share-modules-link http://...
+        div.controls
+          div
+            button.save-btn.btn.btn--ok Save to URL
+            button.reset-btn.btn.btn--cancel Reset
       .modules
         h2 Trade modules
         section.modules-pack
