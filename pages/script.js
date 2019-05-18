@@ -25,6 +25,8 @@ function main() {
   Model.onChange(renderResult);
   Model.onChange(updateButtons);
   Model.setData(getInitModules());
+
+  console.log(`OK`);
 }
 
 function getInitModules() {
