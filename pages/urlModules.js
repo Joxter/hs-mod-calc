@@ -11,8 +11,12 @@ export function parseModules(modules, url) {
 export function stringifyModules(modules, userSelect) {
   let url = '';
 
+  function transdorm(input = 0) {
+    return (+input).toString(16).toLocaleUpperCase();
+  }
+
   modules.forEach((moduleName, i) => {
-    url += (userSelect[moduleName] || 0).toString(16).toLocaleUpperCase();
+    url += transdorm(userSelect[moduleName]);
   });
 
   return url;
