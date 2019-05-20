@@ -1,4 +1,5 @@
 import { save, get } from './storage';
+import './state';
 const modulesData = require('./moduleData').modulesData;
 const allModuleKeys = require('./moduleData').allModuleKeys;
 const parseModules = require('./urlModules').parseModules;
