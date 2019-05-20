@@ -150,15 +150,33 @@ function loadModulesFromStorage() {
 
 function initSaveButton(button) {
   button.addEventListener('click', () => {
-    const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
-    const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
-
-    save(CURRENT_URL_RAPAM, currntStr);
-    save(TARGET_URL_RAPAM, targetStr);
-    const newUrl = `${location.pathname}?${CURRENT_URL_RAPAM}=${currntStr}&${TARGET_URL_RAPAM}=${targetStr}`;
+    const newUrl = getLink({ isCurrent: true, isTarget: true });
 
     window.history.pushState('', '', newUrl);
   });
+}
+
+function getLink({ isCurrent, isTarget }) {
+  let newUrl = `${location.origin}${location.pathname}`;
+  const params = [];
+
+  if (isCurrent) {
+    let currentStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
+    params.push(`${CURRENT_URL_RAPAM}=${currentStr}`);
+  }
+
+  if (isTarget) {
+    let targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
+    params.push(`${TARGET_URL_RAPAM}=${targetStr}`);
+  }
+
+  const paramsStr = params.join(`&`);
+
+  if (paramsStr) {
+    newUrl += `?${paramsStr}`;
+  }
+
+  return newUrl;
 }
 
 function initResetButton(button) {
