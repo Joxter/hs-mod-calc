@@ -9,7 +9,7 @@ function diffKeys(objA, objB) {
   return aKeys.filter((key) => objA[key] !== objB[key]);
 }
 
-function createStore(initState) {
+export function createStore(initState) {
   let data = initState;
 
   const reducers = {};
@@ -30,6 +30,12 @@ function createStore(initState) {
       }
 
       watchers[key].push(callback);
+
+      callback(data);
+    },
+
+    getState() {
+      return data;
     },
 
     dispatch(actionName, payload) {
@@ -62,7 +68,7 @@ function createStore(initState) {
   return store;
 }
 
-function createEvent(eventName) {
+export function createEvent(eventName) {
   const innerEventName = Symbol(eventName);
 
   function event(payload) {
@@ -79,54 +85,3 @@ function createEvent(eventName) {
 
   return event;
 }
-
-const inc = createEvent(`inc`);
-const reset = createEvent(`reset`);
-const toggle = createEvent(`toggle`);
-
-const store = createStore({
-  counter: 0,
-  toggler: false,
-  //
-  // modules: {
-  //   // miduleId: {current, target}
-  // },
-  //
-  // isAutosave: false, // true / false
-  // isShareCurrent: false, // true / false
-  // isShareTarget: false, // true / false
-  //
-  // modalForm: {
-  //   moduleId: null,
-  //   currentLevel: null,
-  //   targetLevel: null,
-  // },
-});
-
-store.on(inc, (state, payload) => ({
-  ...state,
-  counter: state.counter + payload,
-}));
-store.on(toggle, (state) => ({
-  ...state,
-  toggler: !state.toggle,
-}));
-store.on(reset, (state) => ({
-  toggler: false,
-  counter: 0,
-}));
-
-store.watch('counter', (state) => {
-  console.log(`counter: `, state);
-});
-store.watch('toggler', (state) => {
-  console.log(`toggler: `, state);
-});
-store.watch('*', (state) => {
-  console.log(`!!! state: `, state);
-});
-
-inc(3);
-toggle();
-reset();
-inc(4);
