@@ -1,11 +1,19 @@
 import { save, get } from './storage';
-import './state';
+import {
+  modulesStore,
+  modalStore,
+  optionsStore,
+  toggleAutosave,
+  toggleShareCurrent,
+  toggleShareTarget,
+  bindCb,
+} from './Model';
+
 const modulesData = require('./moduleData').modulesData;
 const allModuleKeys = require('./moduleData').allModuleKeys;
 const parseModules = require('./urlModules').parseModules;
 const stringifyModules = require('./urlModules').stringifyModules;
 const parseQueryString = require('./urlModules').parseQueryString;
-const Model = require('./Model').default;
 const Modal = require('./Modal').default;
 
 const modules = document.querySelector('.modules');
@@ -17,12 +25,12 @@ const newLoadBtn = document.querySelector('.save-button--js');
 
 const resultCreditSpan = document.querySelector('.result-credit .value');
 const resultDurationSpan = document.querySelector('.result-duration .value');
-const autosaveCheckBox = document.querySelector('.autosave--js');
 
 const CURRENT_URL_RAPAM = 'cm';
 const TARGET_URL_RAPAM = 'tm';
 
 document.addEventListener('DOMContentLoaded', main);
+const Model = {};
 
 function main() {
   initNewSaveButton(newSaveBtn);
@@ -32,21 +40,64 @@ function main() {
   initSaveButton(saveBtn);
   initResetButton(resetBtn);
 
-  ininAutosaveCB();
+  initAutosaveCB();
+  initShareLink();
 
-  Model.onChange(autosavaModules);
-  Model.onChange(renderResult);
-  Model.onChange(updateButtons);
-  Model.setData(getNewInitModules());
+  // Model.onChange(autosavaModules);
+  // Model.onChange(renderResult);
+  // Model.onChange(updateButtons);
+  // Model.setData(getNewInitModules());
 }
 
-function ininAutosaveCB() {
-  autosaveCheckBox.addEventListener(`change`, () => autosavaModules());
+function initAutosaveCB() {
+  bindCb(document.querySelector('.autosave--js'), optionsStore, toggleAutosave, `isAutosave`);
+}
+
+function initShareLink() {
+  const shareLink = document.querySelector('.share-modules-link--js');
+
+  bindCb(document.querySelector('.share-current--js'), optionsStore, toggleShareCurrent, `isShareCurrent`);
+  bindCb(document.querySelector('.share-target--js'), optionsStore, toggleShareTarget, `isShareTarget`);
+
+  function renderLink(state) {
+    const link = getLink({
+      isCurrent: state.isShareCurrent,
+      isTarget: state.isShareTarget,
+    });
+
+    shareLink.innerHTML = link;
+  }
+
+  optionsStore.watch(`isShareCurrent`, renderLink);
+  optionsStore.watch(`isShareTarget`, renderLink);
+}
+
+function getLink({ isCurrent, isTarget }) {
+  let newUrl = `${location.origin}${location.pathname}`;
+  const params = [];
+
+  if (isCurrent) {
+    let currentStr = stringifyModules(allModuleKeys, `CURRENT_MODULES`);
+    params.push(`${CURRENT_URL_RAPAM}=${currentStr}`);
+  }
+
+  if (isTarget) {
+    let targetStr = stringifyModules(allModuleKeys, `TARGET_MODULES`);
+    params.push(`${TARGET_URL_RAPAM}=${targetStr}`);
+  }
+
+  const paramsStr = params.join(`&`);
+
+  if (paramsStr) {
+    newUrl += `?${paramsStr}`;
+  }
+
+  return newUrl;
 }
 
 function autosavaModules() {
   if (autosaveCheckBox.checked) {
-    saveModules(allModuleKeys, Model);
+    // saveModules(allModuleKeys, Model);
   }
 }
 
@@ -113,6 +164,7 @@ function transformSavedDataToModelData({ currentModuleStr, targetModuleStr }) {
 }
 
 function saveModules(allModuleKeys, Model) {
+  return;
   const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
   const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
 
@@ -132,7 +184,7 @@ function getModules() {
 
 function initNewSaveButton(button) {
   button.addEventListener(`click`, () => {
-    saveModules(allModuleKeys, Model);
+    // saveModules(allModuleKeys, Model);
   });
 }
 
@@ -146,7 +198,7 @@ function loadModulesFromStorage() {
   const moduleStrs = getModules();
   const moduleData = transformSavedDataToModelData(moduleStrs);
 
-  Model.setData(moduleData);
+  // Model.setData(moduleData);
 }
 
 function initSaveButton(button) {
@@ -157,33 +209,10 @@ function initSaveButton(button) {
   });
 }
 
-function getLink({ isCurrent, isTarget }) {
-  let newUrl = `${location.origin}${location.pathname}`;
-  const params = [];
-
-  if (isCurrent) {
-    let currentStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
-    params.push(`${CURRENT_URL_RAPAM}=${currentStr}`);
-  }
-
-  if (isTarget) {
-    let targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
-    params.push(`${TARGET_URL_RAPAM}=${targetStr}`);
-  }
-
-  const paramsStr = params.join(`&`);
-
-  if (paramsStr) {
-    newUrl += `?${paramsStr}`;
-  }
-
-  return newUrl;
-}
-
 function initResetButton(button) {
   button.addEventListener('click', () => {
-    Model.reset(`current`);
-    Model.reset(`target`);
+    // Model.reset(`current`);
+    // Model.reset(`target`);
   });
 }
 
@@ -248,6 +277,7 @@ function initModulesButtons(modulesDiv) {
     }
 
     btn.addEventListener('click', () => {
+      return;
       Modal.open({
         moduleData: modulesData[moduleName],
         selected: {
