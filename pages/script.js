@@ -1,4 +1,4 @@
-import { save, get } from './storage';
+import { save, get } from './localStorageUtils';
 import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
 
