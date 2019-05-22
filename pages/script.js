@@ -1,12 +1,8 @@
 import { save, get } from './localStorageUtils';
 import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
-
-const modulesData = require('./moduleData').modulesData;
-const allModuleKeys = require('./moduleData').allModuleKeys;
-const parseModules = require('./urlModules').parseModules;
-const stringifyModules = require('./urlModules').stringifyModules;
-const parseQueryString = require('./urlModules').parseQueryString;
+import { modulesData, allModuleKeys } from './moduleData';
+import { parseModules, stringifyModules, parseQueryString } from './urlModules';
 
 const modules = document.querySelector('.modules');
 const saveBtn = document.querySelector('.save-btn');
