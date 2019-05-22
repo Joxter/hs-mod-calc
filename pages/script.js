@@ -9,13 +9,14 @@ const saveBtn = document.querySelector('.save-btn');
 const resetBtn = document.querySelector('.reset-btn');
 
 const newSaveBtn = document.querySelector('.save-button--js');
-const newLoadBtn = document.querySelector('.save-button--js');
+const newLoadBtn = document.querySelector('.load-button--js');
 
 const resultCreditSpan = document.querySelector('.result-credit .value');
 const resultDurationSpan = document.querySelector('.result-duration .value');
 
 const CURRENT_URL_RAPAM = 'cm';
 const TARGET_URL_RAPAM = 'tm';
+const LOCAL_STORAGE_MODULE_KEY = 'player_modules';
 
 document.addEventListener('DOMContentLoaded', main);
 const Model = {};
@@ -34,7 +35,7 @@ function main() {
 
   optionsStore.watch(`*`, (_) => console.log(_));
 
-  modulesStore.set(() => getLocalStorageSavedModules());
+  modulesStore.set(() => getModulesFromLocalStorage());
 }
 
 function initAutosaveCB() {
@@ -85,7 +86,6 @@ function initModal() {
         }));
       },
       onOk: ({ from, to }) => {
-        // console.log({ from, to });
         modulesStore.set(() => ({
           [moduleId]: {
             current: +from,
@@ -120,18 +120,10 @@ function getLink({ isCurrent, isTarget }) {
   return newUrl;
 }
 
-function autosavaModules() {
-  if (autosaveCheckBox.checked) {
-    // saveModules(allModuleKeys, Model);
+function autosaveModules() { // todo сделать автосейв
+  if (optionsStore.getState().isAutosave) {
+    saveModules(allModuleKeys, Model);
   }
-}
-
-function getLocalStorageSavedModules() {
-  const moduleStrs = getModulesFromLocalStorage();
-
-  const moduleData = transformSavedDataToModelData(moduleStrs);
-
-  return moduleData;
 }
 
 function getInitModules() {
@@ -142,9 +134,7 @@ function getInitModules() {
 }
 
 function getModulesStrFromUrl(url) {
-  url = url || `?`;
-
-  const urlData = parseQueryString(url.slice(1));
+  const urlData = parseQueryString(url);
 
   const currentModuleStr = urlData[CURRENT_URL_RAPAM] || ``;
   const targetModuleStr = urlData[TARGET_URL_RAPAM] || ``;
@@ -171,28 +161,31 @@ function transformSavedDataToModelData({ currentModuleStr, targetModuleStr }) {
   return modulesData;
 }
 
-function saveModules(allModuleKeys, Model) {
-  return;
-  const currntStr = stringifyModules(allModuleKeys, Model.getSection(`current`));
-  const targetStr = stringifyModules(allModuleKeys, Model.getSection(`target`));
-
-  save(CURRENT_URL_RAPAM, currntStr);
-  save(TARGET_URL_RAPAM, targetStr);
+function saveModules(store) {
+  save(LOCAL_STORAGE_MODULE_KEY, store.getState());
 }
 
 function getModulesFromLocalStorage() {
-  const currentModuleStr = get(CURRENT_URL_RAPAM);
-  const targetModuleStr = get(TARGET_URL_RAPAM);
+  const data = get(LOCAL_STORAGE_MODULE_KEY, getCleanState());
+  return data;
+}
 
-  return {
-    currentModuleStr,
-    targetModuleStr,
-  };
+function getCleanState() {
+  const data = {};
+
+  allModuleKeys.forEach((key) => {
+    data[key] = {
+      current: 0,
+      target: 0,
+    };
+  });
+
+  return data;
 }
 
 function initNewSaveButton(button) {
   button.addEventListener(`click`, () => {
-    // saveModules(allModuleKeys, Model);
+    saveModules(modulesStore);
   });
 }
 
@@ -286,7 +279,8 @@ function initModulesButtons(modulesDiv) {
 
     btn.addEventListener('click', () => {
       const moduleData = modulesData[moduleName];
-      const userSelect = modulesStore.getState()[moduleData.id];
+      const state = modulesStore.getState();
+      const userSelect = state[moduleData.id];
 
       modalStore.set(() => ({
         moduleId: moduleData.id,
