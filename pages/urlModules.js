@@ -1,8 +1,8 @@
-export function parseModules(modules, url) {
+export function parseModules(modules, url = ``) {
   const userSelect = {};
 
   modules.forEach((moduleName, i) => {
-    userSelect[moduleName] = +`0x${url[i]}` || 0;
+    userSelect[moduleName] = +`0x${url[i] || 0}` || 0;
   });
 
   return userSelect;

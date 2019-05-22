@@ -1,20 +1,12 @@
 import { save, get } from './storage';
-import {
-  modulesStore,
-  modalStore,
-  optionsStore,
-  toggleAutosave,
-  toggleShareCurrent,
-  toggleShareTarget,
-  bindCb,
-} from './Model';
+import { optionsStore, modalStore, modulesStore } from './Model';
+import Modal from './Modal';
 
 const modulesData = require('./moduleData').modulesData;
 const allModuleKeys = require('./moduleData').allModuleKeys;
 const parseModules = require('./urlModules').parseModules;
 const stringifyModules = require('./urlModules').stringifyModules;
 const parseQueryString = require('./urlModules').parseQueryString;
-const Modal = require('./Modal').default;
 
 const modules = document.querySelector('.modules');
 const saveBtn = document.querySelector('.save-btn');
@@ -42,24 +34,30 @@ function main() {
 
   initAutosaveCB();
   initShareLink();
+  initModal();
 
-  // Model.onChange(autosavaModules);
-  // Model.onChange(renderResult);
-  // Model.onChange(updateButtons);
-  // Model.setData(getNewInitModules());
+  optionsStore.watch(`*`, (_) => console.log(_));
+
+  modulesStore.set(() => getLocalStorageSavedModules());
 }
 
 function initAutosaveCB() {
-  bindCb(document.querySelector('.autosave--js'), optionsStore, toggleAutosave, `isAutosave`);
+  optionsStore.bindCb(document.querySelector('.autosave--js'), ({ isAutosave }) => ({
+    isAutosave: !isAutosave,
+  }));
 }
 
 function initShareLink() {
-  const shareLink = document.querySelector('.share-modules-link--js');
-
-  bindCb(document.querySelector('.share-current--js'), optionsStore, toggleShareCurrent, `isShareCurrent`);
-  bindCb(document.querySelector('.share-target--js'), optionsStore, toggleShareTarget, `isShareTarget`);
+  optionsStore.bindCb(document.querySelector('.share-current--js'), ({ isShareCurrent }) => ({
+    isShareCurrent: !isShareCurrent,
+  }));
+  optionsStore.bindCb(document.querySelector('.share-target--js'), ({ isShareTarget }) => ({
+    isShareTarget: !isShareTarget,
+  }));
 
   function renderLink(state) {
+    const shareLink = document.querySelector('.share-modules-link--js');
+
     const link = getLink({
       isCurrent: state.isShareCurrent,
       isTarget: state.isShareTarget,
@@ -70,6 +68,37 @@ function initShareLink() {
 
   optionsStore.watch(`isShareCurrent`, renderLink);
   optionsStore.watch(`isShareTarget`, renderLink);
+}
+
+function initModal() {
+  modalStore.watch(`moduleId`, ({ moduleId, currentLevel, targetLevel }) => {
+    if (!moduleId) {
+      Modal.close();
+      return;
+    }
+
+    Modal.open({
+      moduleData: modulesData[moduleId],
+      selected: {
+        from: currentLevel,
+        to: targetLevel,
+      },
+      onCancel: () => {
+        modalStore.set(() => ({
+          moduleId: null,
+        }));
+      },
+      onOk: ({ from, to }) => {
+        // console.log({ from, to });
+        modulesStore.set(() => ({
+          [moduleId]: {
+            current: +from,
+            target: +to,
+          },
+        }));
+      },
+    });
+  });
 }
 
 function getLink({ isCurrent, isTarget }) {
@@ -101,8 +130,9 @@ function autosavaModules() {
   }
 }
 
-function getNewInitModules() {
-  const moduleStrs = getModules();
+function getLocalStorageSavedModules() {
+  const moduleStrs = getModulesFromLocalStorage();
+
   const moduleData = transformSavedDataToModelData(moduleStrs);
 
   return moduleData;
@@ -130,35 +160,17 @@ function getModulesStrFromUrl(url) {
 }
 
 function transformSavedDataToModelData({ currentModuleStr, targetModuleStr }) {
-  const modulesData = [];
+  const modulesData = {};
 
-  if (currentModuleStr) {
-    const currentModules = parseModules(allModuleKeys, currentModuleStr);
+  const currentModules = parseModules(allModuleKeys, currentModuleStr || ``);
+  const targetModules = parseModules(allModuleKeys, targetModuleStr || ``);
 
-    Object.keys(currentModules)
-      .filter((moduleName) => currentModules[moduleName])
-      .forEach((moduleName) => {
-        modulesData.push({
-          module: moduleName,
-          level: currentModules[moduleName],
-          section: `current`,
-        });
-      });
-  }
-
-  if (targetModuleStr) {
-    const targetModules = parseModules(allModuleKeys, targetModuleStr);
-
-    Object.keys(targetModules)
-      .filter((moduleName) => targetModules[moduleName])
-      .forEach((moduleName) => {
-        modulesData.push({
-          module: moduleName,
-          level: targetModules[moduleName],
-          section: `target`,
-        });
-      });
-  }
+  Object.keys(currentModules).forEach((moduleId) => {
+    modulesData[moduleId] = {
+      current: currentModules[moduleId],
+      target: targetModules[moduleId],
+    };
+  });
 
   return modulesData;
 }
@@ -172,7 +184,7 @@ function saveModules(allModuleKeys, Model) {
   save(TARGET_URL_RAPAM, targetStr);
 }
 
-function getModules() {
+function getModulesFromLocalStorage() {
   const currentModuleStr = get(CURRENT_URL_RAPAM);
   const targetModuleStr = get(TARGET_URL_RAPAM);
 
@@ -195,7 +207,7 @@ function initNewLoadButton(button) {
 }
 
 function loadModulesFromStorage() {
-  const moduleStrs = getModules();
+  const moduleStrs = getModulesFromLocalStorage();
   const moduleData = transformSavedDataToModelData(moduleStrs);
 
   // Model.setData(moduleData);
@@ -228,20 +240,22 @@ function getModuleTerm(moduleData) {
   return moduleData.data.map(([price, term]) => term);
 }
 
-function renderResult(newData, state) {
+function renderResult(state) {
   let term = 0;
   let money = 0;
 
-  Object.keys(state.target).forEach((modName) => {
-    const currentPrice = getSumFirst(getModulePrices(modulesData[modName]), state.current[modName]);
-    const targetPrice = getSumFirst(getModulePrices(modulesData[modName]), state.target[modName]);
+  Object.keys(state).forEach((moduleId) => {
+    const userModuleData = state[moduleId];
+
+    const currentPrice = getSumFirst(getModulePrices(modulesData[moduleId]), userModuleData.current);
+    const targetPrice = getSumFirst(getModulePrices(modulesData[moduleId]), userModuleData.target);
 
     if (targetPrice > currentPrice) {
       money += targetPrice - currentPrice;
     }
 
-    const currentTerm = getSumFirst(getModuleTerm(modulesData[modName]), state.current[modName]);
-    const targetTerm = getSumFirst(getModuleTerm(modulesData[modName]), state.target[modName]);
+    const currentTerm = getSumFirst(getModuleTerm(modulesData[moduleId]), userModuleData.current);
+    const targetTerm = getSumFirst(getModuleTerm(modulesData[moduleId]), userModuleData.target);
 
     if (targetTerm > currentTerm) {
       term += targetTerm - currentTerm;
@@ -257,13 +271,11 @@ function renderResult(newData, state) {
 }
 
 function updateButtons(modulesData) {
-  modulesData.forEach(({ module, level, section }) => {
-    const btn = document.querySelector(`.module[data-module-id='${module}']`);
-    if (section === `current`) {
-      btn.dataset.currentL = level;
-    } else {
-      btn.dataset.targetL = level;
-    }
+  Object.keys(modulesData).forEach((moduleId) => {
+    const btn = document.querySelector(`.module[data-module-id='${moduleId}']`);
+
+    btn.dataset.currentL = modulesData[moduleId].current;
+    btn.dataset.targetL = modulesData[moduleId].target;
   });
 }
 
@@ -277,29 +289,23 @@ function initModulesButtons(modulesDiv) {
     }
 
     btn.addEventListener('click', () => {
-      return;
-      Modal.open({
-        moduleData: modulesData[moduleName],
-        selected: {
-          from: Model.getLevel({ section: `current`, module: moduleName }),
-          to: Model.getLevel({ section: `target`, module: moduleName }),
-        },
-        onOk: (moduleLevel) => {
-          Model.setData([
-            {
-              module: moduleName,
-              level: moduleLevel.from,
-              section: `current`,
-            },
-            {
-              module: moduleName,
-              level: moduleLevel.to,
-              section: `target`,
-            },
-          ]);
-        },
-      });
+      const moduleData = modulesData[moduleName];
+      const userSelect = modulesStore.getState()[moduleData.id];
+
+      modalStore.set(() => ({
+        moduleId: moduleData.id,
+        currentLevel: userSelect.current,
+        targetLevel: userSelect.target,
+      }));
     });
+  });
+
+  modulesStore.watch(`*`, (state) => {
+    updateButtons(state);
+  });
+
+  modulesStore.watch(`*`, (state) => {
+    renderResult(state);
   });
 }
 

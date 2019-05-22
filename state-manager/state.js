@@ -1,12 +1,10 @@
+import { optionsStore } from '../pages/Model';
+
 function diffKeys(objA, objB) {
-  const aKeys = Object.keys(objA).sort();
   const bKeys = Object.keys(objB).sort();
 
-  if (aKeys.join(',') !== bKeys.join(',')) {
-    throw new Error(`Object should have similar keys`);
-  }
-
-  return aKeys.filter((key) => objA[key] !== objB[key]);
+  // console.log(bKeys.filter((key) => objA[key] !== objB[key]));
+  return bKeys.filter((key) => objA[key] !== objB[key]);
 }
 
 export function createStore(initState) {
@@ -16,7 +14,8 @@ export function createStore(initState) {
   const watchers = {};
 
   function callWatchers(keys, data) {
-    [keys, `*`].forEach((diffKey) => {
+    [...keys, `*`].forEach((diffKey) => {
+      // console.log(diffKey);
       (watchers[diffKey] || []).forEach((watcher) => {
         watcher(data);
       });
@@ -32,6 +31,14 @@ export function createStore(initState) {
       watchers[key].push(callback);
 
       callback(data);
+    },
+
+    set(callback) {
+      _set(callback(data));
+    },
+
+    reset() {
+      callWatchers(Object.keys(data));
     },
 
     getState() {
@@ -63,7 +70,29 @@ export function createStore(initState) {
 
       reducers[action.jActionName].push(callback);
     },
+
+    bindCb(elem, action) {
+      elem.addEventListener(`change`, (event) => {
+        event.preventDefault();
+        store.set(action);
+      });
+
+      const key = Object.keys(action({}));
+
+      optionsStore.watch(key, (state) => {
+        elem.checked = state[key];
+      });
+    },
   };
+
+  const _set = createEvent(`set`);
+
+  store.on(_set, (state, payload) => {
+    return {
+      ...state,
+      ...payload,
+    };
+  });
 
   return store;
 }

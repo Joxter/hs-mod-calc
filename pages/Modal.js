@@ -25,8 +25,9 @@ okBtn.addEventListener('click', () => {
   Modal.close();
 });
 
+let cancelButtonHandler = null;
 cancelBtn.addEventListener('click', () => {
-  Modal.close();
+  cancelButtonHandler && cancelButtonHandler();
 });
 
 function getOption(level, selected) {
@@ -48,12 +49,13 @@ function setSelectData(moduleData, selected) {
 }
 
 const Modal = {
-  open({ moduleData, selected, onOk }) {
+  open({ moduleData, selected, onOk, onCancel }) {
     setSelectData(moduleData, selected);
     modal.style.display = 'block';
     modal.scrollTop = 0;
 
     okButtonHandler = onOk;
+    cancelButtonHandler = onCancel;
   },
   close() {
     modal.style.display = '';

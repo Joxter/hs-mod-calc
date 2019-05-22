@@ -3,6 +3,7 @@ import { createEvent, createStore } from '../state-manager/state';
 export const modulesStore = createStore({
   // miduleId: {current, target}
 });
+window.modulesStore = modulesStore;
 
 export const updateModule = createEvent(`updateModule`); // {...state, modId: {current, target}}
 
@@ -10,6 +11,7 @@ modulesStore.on(updateModule, (state, payload) => ({
   ...state,
   ...payload,
 }));
+
 
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -20,6 +22,7 @@ export const optionsStore = createStore({
   isShareCurrent: false, // true / false
   isShareTarget: false, // true / false
 });
+window.optionsStore = optionsStore;
 
 export const toggleAutosave = createEvent(`toggleAutosave`);
 export const toggleShareCurrent = createEvent(`toggleShareCurrent`);
@@ -49,6 +52,7 @@ export const modalStore = createStore({
   currentLevel: null,
   targetLevel: null,
 });
+window.modalStore = modalStore;
 
 const changeModuleId = createEvent(`changeModuleId`);
 const changeLevel = createEvent(`changeLevel`);
@@ -67,14 +71,3 @@ modalStore.on(changeLevel, ({ current, target }) => ({
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-
-export function bindCb(elem, store, action, key) {
-  elem.addEventListener(`change`, (event) => {
-    event.preventDefault();
-    action();
-  });
-
-  optionsStore.watch(key, (state) => {
-    elem.checked = state[key];
-  });
-}
