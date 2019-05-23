@@ -22,20 +22,20 @@ document.addEventListener('DOMContentLoaded', main);
 const Model = {};
 
 function main() {
+  modulesStore.set(() => getModulesFromLocalStorage());
+
   initNewSaveButton(newSaveBtn);
   initNewLoadButton(newLoadBtn);
 
   initModulesButtons(modules);
-  initSaveButton(saveBtn);
+  // initSaveButton(saveBtn);
   initResetButton(resetBtn);
 
   initAutosaveCB();
   initShareLink();
   initModal();
 
-  optionsStore.watch(`*`, (_) => console.log(_));
-
-  modulesStore.set(() => getModulesFromLocalStorage());
+  // optionsStore.watch(`*`, (_) => console.log(_));
 }
 
 function initAutosaveCB() {
@@ -55,16 +55,24 @@ function initShareLink() {
   function renderLink(state) {
     const shareLink = document.querySelector('.share-modules-link--js');
 
-    const link = getLink({
-      isCurrent: state.isShareCurrent,
-      isTarget: state.isShareTarget,
-    });
+    const link =
+      state.isShareCurrent || state.isShareTarget
+        ? getLink({
+            isCurrent: state.isShareCurrent,
+            isTarget: state.isShareTarget,
+          })
+        : ``;
 
     shareLink.innerHTML = link;
   }
 
-  optionsStore.watch(`isShareCurrent`, renderLink);
-  optionsStore.watch(`isShareTarget`, renderLink);
+  optionsStore.watch(`*`, renderLink);
+  modulesStore.watch(`*`, () => {
+    setTimeout(() => {
+      // неприятный хак(
+      renderLink(optionsStore.getState());
+    }, 0);
+  });
 }
 
 function initModal() {
@@ -100,14 +108,13 @@ function initModal() {
 function getLink({ isCurrent, isTarget }) {
   let newUrl = `${location.origin}${location.pathname}`;
   const params = [];
+  const { currentStr, targetStr } = stringifyModules(allModuleKeys, modulesStore.getState());
 
   if (isCurrent) {
-    let currentStr = stringifyModules(allModuleKeys, `CURRENT_MODULES`);
     params.push(`${CURRENT_URL_RAPAM}=${currentStr}`);
   }
 
   if (isTarget) {
-    let targetStr = stringifyModules(allModuleKeys, `TARGET_MODULES`);
     params.push(`${TARGET_URL_RAPAM}=${targetStr}`);
   }
 
@@ -120,7 +127,8 @@ function getLink({ isCurrent, isTarget }) {
   return newUrl;
 }
 
-function autosaveModules() { // todo сделать автосейв
+function autosaveModules() {
+  // todo сделать автосейв
   if (optionsStore.getState().isAutosave) {
     saveModules(allModuleKeys, Model);
   }
@@ -202,6 +210,7 @@ function loadModulesFromStorage() {
   // Model.setData(moduleData);
 }
 
+/* 
 function initSaveButton(button) {
   button.addEventListener('click', () => {
     const newUrl = getLink({ isCurrent: true, isTarget: true });
@@ -209,7 +218,7 @@ function initSaveButton(button) {
     window.history.pushState('', '', newUrl);
   });
 }
-
+ */
 function initResetButton(button) {
   button.addEventListener('click', () => {
     // Model.reset(`current`);

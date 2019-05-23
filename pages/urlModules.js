@@ -8,19 +8,24 @@ export function parseModules(modules, url = ``) {
   return userSelect;
 }
 
-export function stringifyModules(modules, userSelect) {
-  let url = '';
+export function stringifyModules(modulesKeys, userSelect) {
+  let currentStr = '';
+  let targetStr = '';
 
   function transform(input) {
     input = +input || 0;
     return input.toString(16).toLocaleUpperCase();
   }
 
-  modules.forEach((moduleName, i) => {
-    url += transform(userSelect[moduleName]);
+  modulesKeys.forEach((moduleName, i) => {
+    currentStr += transform(userSelect[moduleName].current);
+    targetStr += transform(userSelect[moduleName].target);
   });
 
-  return url;
+  return {
+    targetStr,
+    currentStr,
+  };
 }
 
 export function parseQueryString(url) {
