@@ -194,7 +194,29 @@ function getCleanState() {
 function initNewSaveButton(button) {
   button.addEventListener(`click`, () => {
     saveModules(modulesStore);
+    updateButton(modulesStore.getState());
   });
+
+  modulesStore.watch(`*`, (store) => {
+    updateButton(store);
+  });
+
+  function updateButton(store) {
+    if (isSameModules(store, getModulesFromLocalStorage())) {
+      button.disabled = true;
+      button.innerHTML = 'Saved';
+    } else {
+      button.disabled = false;
+      button.innerHTML = 'Save modules';
+    }
+  }
+}
+
+function isSameModules(modulesA, modulesB) {
+  const aStr = stringifyModules(allModuleKeys, modulesA);
+  const bStr = stringifyModules(allModuleKeys, modulesB);
+
+  return aStr.currentStr === bStr.currentStr && aStr.targetStr === bStr.targetStr;
 }
 
 function initNewLoadButton(button) {
