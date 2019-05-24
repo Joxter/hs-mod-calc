@@ -5,8 +5,6 @@ import { modulesData, allModuleKeys } from './moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
 
 const modules = document.querySelector('.modules');
-const saveBtn = document.querySelector('.save-btn');
-const resetBtn = document.querySelector('.reset-btn');
 
 const newSaveBtn = document.querySelector('.save-button--js');
 const newLoadBtn = document.querySelector('.load-button--js');
@@ -19,29 +17,39 @@ const TARGET_URL_RAPAM = 'tm';
 const LOCAL_STORAGE_MODULE_KEY = 'player_modules';
 
 document.addEventListener('DOMContentLoaded', main);
-const Model = {};
 
 function main() {
-  modulesStore.set(() => getModulesFromLocalStorage());
+  modulesStore.set(() => {
+    const urlModules = getModulesStrFromUrl(location.search);
 
-  initNewSaveButton(newSaveBtn);
-  initNewLoadButton(newLoadBtn);
+    if (urlModules.currentModuleStr || urlModules.targetModuleStr) {
+      return getInitModules();
+    } else {
+      return getModulesFromLocalStorage();
+    }
+  });
+
+  initSaveAndLoadButtons(newSaveBtn, newLoadBtn);
 
   initModulesButtons(modules);
-  // initSaveButton(saveBtn);
-  initResetButton(resetBtn);
 
   initAutosaveCB();
   initShareLink();
   initModal();
-
-  // optionsStore.watch(`*`, (_) => console.log(_));
 }
 
 function initAutosaveCB() {
   optionsStore.bindCb(document.querySelector('.autosave--js'), ({ isAutosave }) => ({
     isAutosave: !isAutosave,
   }));
+
+  modulesStore.watch(`*`, (state) => {
+    autosaveModules(state);
+  });
+
+  optionsStore.watch(`isAutosave`, () => {
+    autosaveModules(modulesStore.getState());
+  });
 }
 
 function initShareLink() {
@@ -127,16 +135,17 @@ function getLink({ isCurrent, isTarget }) {
   return newUrl;
 }
 
-function autosaveModules() {
-  // todo сделать автосейв
+function autosaveModules(modules) {
   if (optionsStore.getState().isAutosave) {
-    saveModules(allModuleKeys, Model);
+    saveModules(modules);
   }
 }
 
 function getInitModules() {
   const moduleStrs = getModulesStrFromUrl(location.search);
   const moduleData = transformSavedDataToModelData(moduleStrs);
+  let newUrl = `${location.origin}${location.pathname}`;
+  window.history.pushState('', '', newUrl);
 
   return moduleData;
 }
@@ -169,8 +178,8 @@ function transformSavedDataToModelData({ currentModuleStr, targetModuleStr }) {
   return modulesData;
 }
 
-function saveModules(store) {
-  save(LOCAL_STORAGE_MODULE_KEY, store.getState());
+function saveModules(modules) {
+  save(LOCAL_STORAGE_MODULE_KEY, modules);
 }
 
 function getModulesFromLocalStorage() {
@@ -191,10 +200,12 @@ function getCleanState() {
   return data;
 }
 
-function initNewSaveButton(button) {
-  button.addEventListener(`click`, () => {
-    saveModules(modulesStore);
-    updateButton(modulesStore.getState());
+function initSaveAndLoadButtons(saveButton, loadButton) {
+  saveButton.addEventListener(`click`, () => {
+    const modules = modulesStore.getState();
+
+    saveModules(modules);
+    updateButton(modules);
   });
 
   modulesStore.watch(`*`, (store) => {
@@ -202,12 +213,17 @@ function initNewSaveButton(button) {
   });
 
   function updateButton(store) {
+      // todo странное поведение тут
     if (isSameModules(store, getModulesFromLocalStorage())) {
-      button.disabled = true;
-      button.innerHTML = 'Saved';
+      saveButton.disabled = true;
+      loadButton.disabled = true;
+
+      saveButton.innerHTML = 'Saved';
     } else {
-      button.disabled = false;
-      button.innerHTML = 'Save modules';
+      saveButton.disabled = false;
+      loadButton.disabled = false;
+
+      saveButton.innerHTML = 'Save modules';
     }
   }
 }
@@ -217,40 +233,6 @@ function isSameModules(modulesA, modulesB) {
   const bStr = stringifyModules(allModuleKeys, modulesB);
 
   return aStr.currentStr === bStr.currentStr && aStr.targetStr === bStr.targetStr;
-}
-
-function initNewLoadButton(button) {
-  button.addEventListener(`click`, () => {
-    loadModulesFromStorage();
-  });
-}
-
-function loadModulesFromStorage() {
-  const moduleStrs = getModulesFromLocalStorage();
-  const moduleData = transformSavedDataToModelData(moduleStrs);
-
-  // Model.setData(moduleData);
-}
-
-/* 
-function initSaveButton(button) {
-  button.addEventListener('click', () => {
-    const newUrl = getLink({ isCurrent: true, isTarget: true });
-
-    window.history.pushState('', '', newUrl);
-  });
-}
- */
-function initResetButton(button) {
-  button.addEventListener('click', () => {
-    // Model.reset(`current`);
-    // Model.reset(`target`);
-  });
-}
-
-function getSumFirst(arr, n) {
-  n = n || 0;
-  return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
 }
 
 function getModulePrices(moduleData) {
@@ -288,6 +270,11 @@ function renderResult(state) {
   resultCreditSpan.innerHTML = money ? `${numberWithCommas(money)} (${numberWithCommas(moneyPerDay)} credit/day)` : `-`;
 
   resultDurationSpan.innerHTML = termString || `-`;
+
+  function getSumFirst(arr, n) {
+    n = n || 0;
+    return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
+  }
 }
 
 function updateButtons(modulesData) {

@@ -27,11 +27,11 @@ html(lang='en')
           span.value
         div.controls
           p Save
-          button.save-button--js save modules
+          button.btn.btn--ok.save-button--js save modules
           label
             input(type='checkbox', name='current').autosave--js
             | Autosave
-          button.load-button--js load saved
+          button.btn.btn--ok.load-button--js load saved
           p Share
           label
             input.share-current--js(type='checkbox', name='current')
@@ -40,10 +40,6 @@ html(lang='en')
             input.share-target--js(type='checkbox', name='target')
             | Target
         a.share-modules-link.share-modules-link--js http://...
-        div.controls
-          div
-            button.save-btn.btn.btn--ok Save to URL
-            button.reset-btn.btn.btn--cancel Reset
       .modules
         h2 Trade modules
         section.modules-pack

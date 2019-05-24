@@ -219,6 +219,10 @@ h3 {
   border-radius: 4px;
 }
 
+.btn:disabled {
+    background-color: #d7d8da;
+}
+
 .btn--cancel {
   background-color: #ef6c8e;
 }
