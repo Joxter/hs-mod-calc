@@ -102,6 +102,9 @@ function initModal() {
         }));
       },
       onOk: ({ from, to }) => {
+        modalStore.set(() => ({
+          moduleId: null,
+        }));
         modulesStore.set(() => ({
           [moduleId]: {
             current: +from,
@@ -208,22 +211,23 @@ function initSaveAndLoadButtons(saveButton, loadButton) {
     updateButton(modules);
   });
 
+  loadButton.addEventListener(`click`, () => {
+    modulesStore.set(() => {
+      return getModulesFromLocalStorage();
+    });
+  });
+
   modulesStore.watch(`*`, (store) => {
     updateButton(store);
   });
 
   function updateButton(store) {
-      // todo странное поведение тут
     if (isSameModules(store, getModulesFromLocalStorage())) {
       saveButton.disabled = true;
       loadButton.disabled = true;
-
-      saveButton.innerHTML = 'Saved';
     } else {
       saveButton.disabled = false;
       loadButton.disabled = false;
-
-      saveButton.innerHTML = 'Save modules';
     }
   }
 }

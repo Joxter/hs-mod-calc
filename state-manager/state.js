@@ -1,9 +1,8 @@
 import { optionsStore } from '../pages/Model';
 
-function diffKeys(objA, objB) {
+function getDiffKeys(objA, objB) {
   const bKeys = Object.keys(objB).sort();
 
-  // console.log(bKeys.filter((key) => objA[key] !== objB[key]));
   return bKeys.filter((key) => objA[key] !== objB[key]);
 }
 
@@ -15,7 +14,6 @@ export function createStore(initState) {
 
   function callWatchers(keys, data) {
     [...keys, `*`].forEach((diffKey) => {
-      // console.log(diffKey);
       (watchers[diffKey] || []).forEach((watcher) => {
         watcher(data);
       });
@@ -52,9 +50,10 @@ export function createStore(initState) {
         return reducer(accData, payload);
       }, data);
 
-      callWatchers(diffKeys(data, newData), newData);
-
+      const diffKeys = getDiffKeys(data, newData);
       data = newData;
+
+      callWatchers(diffKeys, data);
     },
 
     on(action, callback) {

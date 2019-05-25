@@ -41,11 +41,14 @@ h3 {
   padding: 0 10px;
 }
 
-.controls {
-  margin-bottom: 10px;
+.save-and-share {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+.save-and-share > * {
+  margin-bottom: 10px;
 }
 
 .reset-btn,
@@ -74,7 +77,7 @@ h3 {
   padding-bottom: 1em;
 }
 
-.modules h2 {
+h2 {
   padding-left: 10px;
   font-weight: normal;
 }
@@ -220,7 +223,7 @@ h3 {
 }
 
 .btn:disabled {
-    background-color: #d7d8da;
+  background-color: #d7d8da;
 }
 
 .btn--cancel {

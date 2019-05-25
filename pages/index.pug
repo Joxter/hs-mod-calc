@@ -25,20 +25,20 @@ html(lang='en')
           span.value
         p.result-duration Duration:&nbsp;
           span.value
-        div.controls
-          p Save
-          button.btn.btn--ok.save-button--js save modules
+        div.save-and-share
+          h2 Save and share
           label
             input(type='checkbox', name='current').autosave--js
             | Autosave
-          button.btn.btn--ok.load-button--js load saved
-          p Share
+          div 
+            button.btn.btn--ok.save-button--js Save modules
+            button.btn.btn--ok.load-button--js Load modules
           label
             input.share-current--js(type='checkbox', name='current')
-            | Current
+            | Share current modules
           label
             input.share-target--js(type='checkbox', name='target')
-            | Target
+            | Share target modules
         a.share-modules-link.share-modules-link--js http://...
       .modules
         h2 Trade modules

@@ -11,7 +11,7 @@ const toSelect = modal.querySelector('select[name=to]');
 
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
-    Modal.close();
+    cancelButtonHandler && cancelButtonHandler();
   }
 });
 
@@ -22,7 +22,6 @@ okBtn.addEventListener('click', () => {
       from: fromSelect.value,
       to: toSelect.value,
     });
-  Modal.close();
 });
 
 let cancelButtonHandler = null;
