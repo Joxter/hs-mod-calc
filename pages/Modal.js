@@ -9,16 +9,6 @@ const cancelBtn = modal.querySelector('.btn--cancel');
 const tableEl = modal.querySelector('.levels-table');
 const rowsEls = modal.querySelectorAll('tr[data-level]');
 
-console.log(rowsEls);
-
-tableEl.addEventListener('change', (event) => {
-  const name = event.target.name;
-  const value = event.target.value;
-
-  console.log(name, value);
-});
-////
-
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     cancelButtonHandler && cancelButtonHandler();
@@ -48,7 +38,6 @@ function getOption(level, selected) {
 }
 
 function setSelectData(moduleData, selected) {
-  console.log(selected);
   const moduleMaxLevel = moduleData.data.length;
   const from = selected.from || 0;
   const to = selected.to || 0;
@@ -62,15 +51,10 @@ function setSelectData(moduleData, selected) {
     toInput.checked = true;
   }
 
-  // const levels = [...Array(moduleData.data.length + 1).keys()];
-
   rowsEls.forEach((row) => {
     const rowLevel = +row.dataset.level;
     row.hidden = rowLevel > moduleMaxLevel;
   });
-
-  // fromSelect.innerHTML = levels.map((level) => getOption(level, level == selected.from)).join(``);
-  // toSelect.innerHTML = levels.map((level) => getOption(level, level == selected.to)).join(``);
 
   title.innerHTML = moduleData.eng || `-`;
 

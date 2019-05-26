@@ -130,16 +130,7 @@ var modulesByTypes = {
     'AreaShield',
     'BlastShield',
   ],
-  weapon: [
-    //
-    'WeakBattery',
-    'Battery',
-    'Laser',
-    'MassBattery',
-    'DualLaser',
-    'Barrage',
-    'DartLauncher',
-  ],
+  weapon: ['WeakBattery', 'Battery', 'Laser', 'MassBattery', 'DualLaser', 'Barrage', 'DartLauncher'],
 };
 
 module.exports = {
