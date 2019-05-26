@@ -65,17 +65,18 @@ html(lang='en')
         section.modules-pack
           each moduleData  in supportModules
             +module(moduleData)
-        p.dev The data is from&nbsp;
-          a(href='http://www.hadesstar.info/', target='_blank') hadesstar.info
-        p.dev Developed by Joxter&nbsp;
-          a(href='https://t.me/joxter', target='_blank') telegram
+        footer    
+          p.dev The data is from&nbsp;
+            a(href='http://www.hadesstar.info/', target='_blank') hadesstar.info
+          p.dev Developed by Joxter&nbsp;
+            a(href='https://t.me/joxter', target='_blank') telegram
     .modal
       .modal-container
         .module-form
           .module-form__header
             span.module-form__icon
             h2.module-form__title -
-          .module-form__selects
+          .module-form__selects(style='display: none;')
             label.module-form__select-label Current level:&nbsp;
               select(name="from")
                 option(value="1" label=1)
@@ -84,6 +85,19 @@ html(lang='en')
               select(name="to")
                 option(value="1" label=1)
                 option(value="2" label=2)
+          table.levels-table
+            tbody
+              tr
+                th Current level
+                th Target level
+              each i in [0,1,2,3,4,5,6,7,8,9,10,11]       
+                tr(data-level=i)
+                  td 
+                    label!= i+'&nbsp;'
+                      input(type='radio', name='from', value=i)
+                  td   
+                    label!= i+'&nbsp;'
+                      input(type='radio', name='to', value=i)
           .module-form__buttons
             button.btn.btn--cancel Cancel
             button.btn.btn--ok Ok

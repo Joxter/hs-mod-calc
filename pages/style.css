@@ -234,10 +234,42 @@ h2 {
   margin-left: 10px;
 }
 
+footer {
+  border-top: 1px solid #101415;
+  padding-bottom: 1px;
+  margin-top: 10px;
+}
+
 .dev {
   text-align: center;
 }
 
 .dev a {
   color: #9fe5fb;
+}
+
+.levels-table {
+  text-align: right;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.levels-table th {
+  /* color: #9fe5fb; */
+  /* font-weight: normal; */
+  /* padding: 5px 0 0 10px; */
+}
+
+.levels-table tr:nth-child(even) {
+  background-color: #161b1d;
+}
+
+.levels-table label {
+  display: block;
+}
+
+.levels-table th,
+.levels-table td {
+  border: 0;
+  padding: 5px 10px;
 }

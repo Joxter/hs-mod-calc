@@ -36,6 +36,10 @@ function main() {
   initAutosaveCB();
   initShareLink();
   initModal();
+
+  modalStore.set(() => ({
+    moduleId: `Teleport`,
+  }));
 }
 
 function initAutosaveCB() {

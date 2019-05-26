@@ -9,6 +9,20 @@ const cancelBtn = modal.querySelector('.btn--cancel');
 const fromSelect = modal.querySelector('select[name=from]');
 const toSelect = modal.querySelector('select[name=to]');
 
+///
+const tableEl = modal.querySelector('.levels-table');
+const rowsEls = modal.querySelectorAll('tr[data-level]');
+
+console.log(rowsEls);
+
+tableEl.addEventListener('change', (event) => {
+  const name = event.target.name;
+  const value = event.target.value;
+
+  console.log(name, value);
+});
+////
+
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     cancelButtonHandler && cancelButtonHandler();
@@ -17,10 +31,13 @@ modal.addEventListener('click', (event) => {
 
 let okButtonHandler = null;
 okBtn.addEventListener('click', () => {
+  const fromInput = modal.querySelector('input[name=from]:checked');
+  const toInput = modal.querySelector('input[name=to]:checked');
+
   okButtonHandler &&
     okButtonHandler({
-      from: fromSelect.value,
-      to: toSelect.value,
+      from: (fromInput && +fromInput.value) || 0,
+      to: (toInput && +toInput.value) || 0,
     });
 });
 
@@ -35,10 +52,29 @@ function getOption(level, selected) {
 }
 
 function setSelectData(moduleData, selected) {
-  const levels = [...Array(moduleData.data.length + 1).keys()];
+  console.log(selected);
+  const moduleMaxLevel = moduleData.data.length;
+  const from = selected.from || 0;
+  const to = selected.to || 0;
+  if (from) {
+    const fromInput = rowsEls[from].querySelector('input[name=from]');
+    fromInput.checked = true;
+  }
 
-  fromSelect.innerHTML = levels.map((level) => getOption(level, level == selected.from)).join(``);
-  toSelect.innerHTML = levels.map((level) => getOption(level, level == selected.to)).join(``);
+  if (to) {
+    const toInput = rowsEls[to].querySelector('input[name=to]');
+    toInput.checked = true;
+  }
+
+  // const levels = [...Array(moduleData.data.length + 1).keys()];
+
+  rowsEls.forEach((row) => {
+    const rowLevel = +row.dataset.level;
+    row.hidden = rowLevel > moduleMaxLevel;
+  });
+
+  // fromSelect.innerHTML = levels.map((level) => getOption(level, level == selected.from)).join(``);
+  // toSelect.innerHTML = levels.map((level) => getOption(level, level == selected.to)).join(``);
 
   title.innerHTML = moduleData.eng || `-`;
 
