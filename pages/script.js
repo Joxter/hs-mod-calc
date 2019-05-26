@@ -36,10 +36,6 @@ function main() {
   initAutosaveCB();
   initShareLink();
   initModal();
-
-  modalStore.set(() => ({
-    moduleId: `Teleport`,
-  }));
 }
 
 function initAutosaveCB() {
@@ -76,14 +72,12 @@ function initShareLink() {
         : ``;
 
     shareLink.innerHTML = link;
+    shareLink.href = link;
   }
 
   optionsStore.watch(`*`, renderLink);
   modulesStore.watch(`*`, () => {
-    setTimeout(() => {
-      // неприятный хак(
-      renderLink(optionsStore.getState());
-    }, 0);
+    renderLink(optionsStore.getState());
   });
 }
 

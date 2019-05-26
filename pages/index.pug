@@ -20,7 +20,9 @@ html(lang='en')
     .container
       header
         h1 Module calculator
+          span.beta (beta)
       div.result
+        h2 Result
         p.result-credit Credit:&nbsp;
           span.value
         p.result-duration Duration:&nbsp;
@@ -39,7 +41,7 @@ html(lang='en')
           label
             input.share-target--js(type='checkbox', name='target')
             | Share target modules
-        a.share-modules-link.share-modules-link--js http://...
+        a(target='_blank').share-modules-link.share-modules-link--js 
       .modules
         h2 Trade modules
         section.modules-pack
@@ -66,10 +68,16 @@ html(lang='en')
           each moduleData  in supportModules
             +module(moduleData)
         footer    
+          p.dev Developed by Joxter&nbsp;
+            | (
+            a(href='https://t.me/joxter', target='_blank') telegram
+            | , 
+            a(href='https://t.me/joxter', target='_blank') twitter
+            | )
+          p.dev Discord&nbsp;
+            a(href='https://discord.gg/X5sUrY6', target='_blank') discord.gg/X5sUrY6
           p.dev The data is from&nbsp;
             a(href='http://www.hadesstar.info/', target='_blank') hadesstar.info
-          p.dev Developed by Joxter&nbsp;
-            a(href='https://t.me/joxter', target='_blank') telegram
     .modal
       .modal-container
         .module-form

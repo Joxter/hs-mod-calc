@@ -6,10 +6,6 @@ const icon = modal.querySelector('.module-form__icon');
 const okBtn = modal.querySelector('.btn--ok');
 const cancelBtn = modal.querySelector('.btn--cancel');
 
-const fromSelect = modal.querySelector('select[name=from]');
-const toSelect = modal.querySelector('select[name=to]');
-
-///
 const tableEl = modal.querySelector('.levels-table');
 const rowsEls = modal.querySelectorAll('tr[data-level]');
 
