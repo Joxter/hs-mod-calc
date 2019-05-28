@@ -282,6 +282,10 @@ function renderResult(state) {
 function updateButtons(modulesData) {
   Object.keys(modulesData).forEach((moduleId) => {
     const btn = document.querySelector(`.module[data-module-id='${moduleId}']`);
+    const { current, target } = modulesData[moduleId];
+
+    btn.classList.toggle(`module--closed`, !current && !target);
+    btn.classList.toggle(`module--active`, current < target);
 
     btn.dataset.currentL = modulesData[moduleId].current;
     btn.dataset.targetL = modulesData[moduleId].target;
