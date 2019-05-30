@@ -1,5 +1,3 @@
-import { optionsStore } from '../pages/Model';
-
 function getDiffKeys(objA, objB) {
   const bKeys = Object.keys(objB).sort();
 
@@ -78,7 +76,7 @@ export function createStore(initState) {
 
       const key = Object.keys(action({}));
 
-      optionsStore.watch(key, (state) => {
+      store.watch(key, (state) => {
         elem.checked = state[key];
       });
     },

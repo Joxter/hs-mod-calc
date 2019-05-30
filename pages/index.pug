@@ -1,3 +1,5 @@
+extends ./layout.pug
+
 mixin module(data)
   - var bg = "background-image: url('./modules/" + data.id + ".png')"
   div.modules-pack__item
@@ -8,99 +10,90 @@ mixin module(data)
     )= data.name
       span.module__icon(style=bg)
 
-doctype html
-html(lang='en')
-  head
-    title Hades Star Module Calculator
-    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
-    style
-      include style.css
-  script(src='script.js', defer)
-  script
-    include heap.js
-  body
-    .container
-      header
-        h1 Module calculator
-          span.beta (beta)
-      div.result
-        h2 Result
-        p.result-credit Credit:&nbsp;
-          span.value
-        p.result-duration Duration:&nbsp;
-          span.value
-        div.save-and-share
-          h2 Save and share
-          label
-            input(type='checkbox', name='current').autosave--js
-            | Autosave
-          div 
-            button.btn.btn--ok.save-button--js Save modules
-            button.btn.btn--ok.load-button--js Load modules
-          label
-            input.share-current--js(type='checkbox', name='current')
-            | Share current modules
-          label
-            input.share-target--js(type='checkbox', name='target')
-            | Share target modules
-          a(target='_blank').share-modules-link.share-modules-link--js
-      .modules
-        h2 Trade modules
-        section.modules-pack
-          each moduleData in tradeModules
-            +module(moduleData)
+block title
+  | Hades Star Module Calculator
 
-        h2 Mining modules
-        section.modules-pack
-          each moduleData  in miningModules
-            +module(moduleData)
+block style
+  link(type='text/css', rel='stylesheet', href='./style.css')
 
-        h2 Weapon modules
-        section.modules-pack
-          each moduleData  in weaponModules
-            +module(moduleData)
+block script
+  script(src='./script.js', defer)
 
-        h2 Shield modules
-        section.modules-pack
-          each moduleData  in shieldModules
-            +module(moduleData)
+block content
+  header
+    h1 Module calculator
+      span.beta (beta)
+  div.result
+    h2 Result
+    p.result-credit Credit:&nbsp;
+      span.value
+    p.result-duration Duration:&nbsp;
+      span.value
+    div.save-and-share
+      h2 Save and share
+      label
+        input(type='checkbox', name='current').autosave--js
+        | Autosave
+      div
+        button.btn.btn--ok.save-button--js Save modules
+        button.btn.btn--ok.load-button--js Load modules
+      label
+        input.share-current--js(type='checkbox', name='current')
+        | Share current modules
+      label
+        input.share-target--js(type='checkbox', name='target')
+        | Share target modules
+      a(target='_blank').share-modules-link.share-modules-link--js
+  .modules
+    h2 Trade modules
+    section.modules-pack
+      each moduleData in tradeModules
+        +module(moduleData)
 
-        h2 Support modules
-        section.modules-pack
-          each moduleData  in supportModules
-            +module(moduleData)
-        footer    
-          p.dev dev by Joxter&nbsp;
-            | (
-            a(href='https://t.me/joxter', target='_blank') telegram
-            | , 
-            a(href='https://twitter.com/Joxterrr', target='_blank') twitter
-            | )
-          p.dev Discord&nbsp;
-            a(href='https://discord.gg/X5sUrY6', target='_blank') discord.gg/X5sUrY6
-          p.dev Module info by&nbsp;
-            a(href='http://www.hadesstar.info/menu-en.html', target='_blank') hadesstar.info
-    .modal
-      .modal-container
-        .module-form
-          .module-form__header
-            span.module-form__icon
-            h2.module-form__title -
-          table.levels-table
-            tbody
-              tr
-                th Current level
-                th Target level
-              each i in [0,1,2,3,4,5,6,7,8,9,10,11]       
-                tr(data-level=i)
-                  td 
-                    label
-                      input(type='radio', name='from', value=i)
-                      span!= i+'&nbsp;'
-                  td   
-                    label
-                      input(type='radio', name='to', value=i)
-                      span!= i+'&nbsp;'
-          .module-form__buttons
-            button.btn.btn--cancel Cancel
-            button.btn.btn--ok Ok
+    h2 Mining modules
+    section.modules-pack
+      each moduleData  in miningModules
+        +module(moduleData)
+
+    h2 Weapon modules
+    section.modules-pack
+      each moduleData  in weaponModules
+        +module(moduleData)
+
+    h2 Shield modules
+    section.modules-pack
+      each moduleData  in shieldModules
+        +module(moduleData)
+
+    h2 Support modules
+    section.modules-pack
+      each moduleData  in supportModules
+        +module(moduleData)
+  .modal
+    .modal-container
+      .module-form
+        .module-form__header
+          span.module-form__icon
+          h2.module-form__title -
+        table.levels-table
+          tbody
+            tr
+              th Current level
+              th Target level
+            each i in [0,1,2,3,4,5,6,7,8,9,10,11]
+              tr(data-level=i)
+                td
+                  label
+                    input(type='radio', name='from', value=i)
+                    span!= i+'&nbsp;'
+                td
+                  label
+                    input(type='radio', name='to', value=i)
+                    span!= i+'&nbsp;'
+        .module-form__buttons
+          button.btn.btn--cancel Cancel
+          button.btn.btn--ok Ok
+
+append footer
+  p.dev Module info by&nbsp;
+    a(href='http://www.hadesstar.info/menu-en.html', target='_blank') hadesstar.info

@@ -3,6 +3,7 @@ import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
 import { modulesData, allModuleKeys } from './moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
+import {stringifyTerm, numberWithCommas } from './utils';
 
 const modules = document.querySelector('.modules');
 
@@ -321,34 +322,4 @@ function initModulesButtons(modulesDiv) {
   modulesStore.watch(`*`, (state) => {
     renderResult(state);
   });
-}
-
-function stringifyTerm(sec) {
-  const secInMin = 60;
-  const secInHour = 60 * secInMin;
-  const secInDay = 24 * secInHour;
-
-  const days = Math.floor(sec / secInDay);
-  const hours = Math.floor((sec - days * secInDay) / secInHour);
-  const mins = Math.floor((sec - days * secInDay - hours * secInHour) / secInMin);
-
-  let result = [];
-
-  if (days) {
-    result.push(days + `d`);
-  }
-
-  if (hours) {
-    result.push(hours + `h`);
-  }
-
-  if (mins) {
-    result.push(mins + `m`);
-  }
-
-  return result.join(` `);
-}
-
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

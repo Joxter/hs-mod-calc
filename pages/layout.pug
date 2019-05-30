@@ -1,0 +1,30 @@
+doctype html
+html(lang='en')
+  head
+    title
+      block title
+        | Hades Star Tools
+    meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+    block style
+    block script
+    script
+      include ./heap.js
+  body
+    .container
+      block content
+      footer
+        ul.pages-links
+          li
+            a(href='./index.pug') Modules calculator
+          li
+            a(href='./crystal-calc.pug') Crystal calculator
+
+        block footer
+          p.dev dev by Joxter&nbsp;
+            | (
+            a(href='https://t.me/joxter', target='_blank') telegram
+            | ,
+            a(href='https://twitter.com/Joxterrr', target='_blank') twitter
+            | )
+          p.dev Discord&nbsp;
+            a(href='https://discord.gg/X5sUrY6', target='_blank') discord.gg/X5sUrY6

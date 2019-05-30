@@ -1,0 +1,37 @@
+@import '../layout.css';
+
+.change-desk {
+  font-size: 16px;
+}
+
+.change-desk__row {
+  display: flex;
+  margin-bottom: 10px;
+    padding: 5px 20px 0;
+}
+
+.change-desk__row--in {
+  padding-top: 5px;
+  border-top: 1px solid #555;
+}
+
+.change-desk__row--out {
+  justify-content: flex-end;
+}
+
+.change-desk__row input {
+  width: 70px;
+}
+
+.result {
+    padding: 0 10px;
+  color: gold;
+}
+
+.time-input {
+  width: 70px;
+}
+
+.time-input input {
+  max-width: 32px;
+}

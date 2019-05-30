@@ -1,0 +1,65 @@
+extends layout
+
+block title
+  | Hades Star Crystal Calculator
+
+block style
+  link(type='text/css', rel='stylesheet', href='./crystal-calc/crystal-calc.css')
+
+block script
+  script(src='./crystal-calc/crystal-calc.js', defer)
+
+block content
+  header
+    h1 Crystal calculator
+
+  main.change-desk
+    div.change-desk__row.change-desk__row--in
+      label.time-input
+        input#days-2-crystals(name='days-2-crystals', type='tel', maxlength='2', value='')
+        |
+        | d
+      label.time-input
+        input#hours-2-crystals(name='hours-2-crystals', type='tel', maxlength='2', value='')
+        |
+        | h
+      label.time-input
+        input#mins-2-crystals(name='mins-2-crystals', type='tel', maxlength='2', value='')
+        |
+        | m
+    div.change-desk__row.change-desk__row--out
+      span#sec-2-crystals-output.result
+      | crystals
+
+    div.change-desk__row.change-desk__row--in
+      label
+        input#credits-2-crystals(name='credits-2-crystals', type='tel', maxlength='8', value='')
+        |
+        | credits
+    div.change-desk__row.change-desk__row--out
+      span#credits-2-crystals-output.result
+      | crystals
+
+    div.change-desk__row.change-desk__row--in
+      label
+        input#hydrogen-2-crystals(name='hydrogen-2-crystals', type='tel', maxlength='7', value='')
+        |
+        | hydrogen
+    div.change-desk__row.change-desk__row--out
+      span#hydrogen-2-crystals-output.result
+      | crystals
+
+    div.change-desk__row.change-desk__row--in
+      label
+        input#crystals-2-any(name='crystals-2-any', type='tel', maxlength='5', value='')
+        |
+        | crysral
+    div.change-desk__row.change-desk__row--out
+      span#crystals-2-sec-output.result
+      | time
+    div.change-desk__row.change-desk__row--out
+      span#crystals-2-credits-output.result
+      | credits
+    div.change-desk__row.change-desk__row--out
+      span#crystals-2-hydrogen-output.result
+      | hydrogen

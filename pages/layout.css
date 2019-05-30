@@ -1,0 +1,97 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Helvetica, sans-serif;
+  background-color: #101415;
+  color: #9fe5fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+p {
+  color: #d7d8da;
+}
+
+header {
+  max-width: 400px;
+  padding: 0 10px;
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #161b1d;
+}
+
+h1 {
+  margin-top: 0;
+  padding-top: 1em;
+  text-align: center;
+}
+
+.beta {
+    color: #909b9e;
+    font-size: 0.5em;
+    position: relative;
+    left: 3px;
+    bottom: 13px;
+    display: inline-block;
+}
+
+h3 {
+  text-align: center;
+}
+
+.btn {
+  font-size: inherit;
+  border: 0;
+  padding: 5px 15px;
+  display: inline-block;
+  background-color: #9fe5fb;
+  border-radius: 4px;
+}
+
+.btn:disabled {
+  background-color: #d7d8da;
+}
+
+.btn--cancel {
+  background-color: #ef6c8e;
+}
+
+.btn + .btn {
+  margin-left: 10px;
+}
+
+footer {
+  border-top: 1px solid #101415;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+.dev {
+  text-align: right;
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+
+.dev a {
+  color: #9fe5fb;
+}
+
+.pages-links {
+  list-style: none;
+  padding-left: 5px;
+}
+
+.pages-links a {
+  color: #d7d8da;
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
