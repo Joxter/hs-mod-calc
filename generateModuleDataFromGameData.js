@@ -4,17 +4,21 @@ var modulesByTypes = require('./someHumanData').modulesByTypes;
 var prettier = require('prettier');
 var csv2json = require('csv2json');
 
+const tempJsonFileName = './raw_data/modules.json';
+const outputFileName = './pages/moduleData.js';
+
 fs.createReadStream('./raw_data/modules.csv')
   .pipe(csv2json({}))
-  .pipe(fs.createWriteStream('./raw_data/modules.json'))
+  .pipe(fs.createWriteStream(tempJsonFileName))
   .on('finish', function() {
-    const file = fs.readFileSync('./raw_data/modules.json').toString();
+    const file = fs.readFileSync(tempJsonFileName).toString();
 
     const modulesDataRaw = JSON.parse(file);
 
     let modulesData = getModuleInfo(modulesDataRaw);
 
-    saveToFile('./raw_data/modulesData.js', modulesData);
+    saveToFile(outputFileName, modulesData);
+    fs.unlinkSync(tempJsonFileName);
   });
 
 function saveToFile(filePath, modulesData) {
@@ -41,7 +45,6 @@ module.exports = {
 };
 `;
 
-  // config from .prettierrc
   fs.writeFileSync(
     filePath,
     prettier.format(content, {
@@ -49,7 +52,7 @@ module.exports = {
       trailingComma: 'es5',
       tabWidth: 2,
       semi: true,
-      printWidth: 120,
+      printWidth: 500, // чтоб массивы выстраивались в одну линию
       jsxSingleQuote: true,
       jsxBracketSameLine: false,
       arrowParens: 'always',
@@ -59,10 +62,78 @@ module.exports = {
   );
 }
 
+function removeFields(obj, fields) {
+  const cleanObj = {};
+
+  for (let key in obj) {
+    if (fields.indexOf(key) === -1) {
+      cleanObj[key] = obj[key];
+    }
+  }
+
+  return cleanObj;
+}
+
+function getNonEmptyString(obj) {
+  const cleanObj = {};
+
+  for (let key in obj) {
+    if (obj[key] !== '') {
+      cleanObj[key] = obj[key];
+    }
+  }
+
+  return cleanObj;
+}
+
+function getValsByKeys(obj, keys) {
+  const res = keys.map((key) => obj[key]);
+  return res;
+}
+
+function sepatareScallable(colNames, data) {
+  const dataByName = {};
+
+  colNames.forEach((name, i) => {
+    dataByName[colNames[i]] = [];
+  });
+
+  data.forEach((dataRow) => {
+    colNames.forEach((name, i) => {
+      dataByName[name].push(dataRow[i]);
+    });
+  });
+
+  colNames.forEach((name, i) => {
+    if (dataByName[name][1] === '' || dataByName[name].length === 1) {
+      dataByName[name] = dataByName[name][0];
+    }
+  });
+
+  return dataByName;
+}
+
 function getModuleInfo(modulesData) {
   let modulesInfo = {};
 
   let currentName = null;
+  let currentMatterKeys = null;
+
+  const trash = [
+    'ActivationType',
+    'ExtraTradeSlots',
+    'ShowWSInfo',
+    'HideSelection',
+    'SlotType',
+    'ClientActivationFx',
+    'SustainedFX',
+    'WeaponFx',
+    'ActivateFX',
+    'ActivateFXStaysInPlace',
+    'WeaponEffectType',
+    'ScaleEffectsWithZoom',
+    'AllowedStarTypes',
+  ];
 
   modulesData.forEach((modData) => {
     if (+modData.Hide) {
@@ -71,18 +142,28 @@ function getModuleInfo(modulesData) {
 
     if (modData.Name && currentName !== modData.Name) {
       currentName = modData.Name;
+      currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
     }
 
     if (!modulesInfo[currentName]) {
       modulesInfo[currentName] = {
         eng: someHumanData[currentName].eng,
         id: currentName,
-        colNames: [`UnlockPrice`, `UnlockTime`],
+        colNames: currentMatterKeys,
         data: [],
+        options: [],
       };
     }
 
-    modulesInfo[currentName].data.push([+modData.UnlockPrice, +modData.UnlockTime]);
+    modulesInfo[currentName].data.push(getValsByKeys(modData, currentMatterKeys));
+  });
+
+  Object.keys(modulesInfo).forEach((key) => {
+    modulesInfo[key] = {
+      eng: modulesInfo[key].eng,
+      id: modulesInfo[key].id,
+      ...sepatareScallable(modulesInfo[key].colNames, modulesInfo[key].data),
+    };
   });
 
   return modulesInfo;

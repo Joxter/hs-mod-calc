@@ -3,7 +3,7 @@ import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
 import { modulesData, allModuleKeys } from './moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
-import {stringifyTerm, numberWithCommas } from './utils';
+import { stringifyTerm, numberWithCommas } from './utils';
 
 const modules = document.querySelector('.modules');
 
@@ -239,10 +239,19 @@ function isSameModules(modulesA, modulesB) {
 }
 
 function getModulePrices(moduleData) {
-  return moduleData.data.map(([price, term]) => price);
+  if (Array.isArray(moduleData.UnlockPrice)) {
+    return moduleData.UnlockPrice.map((price) => +price);
+  } else {
+    return [moduleData.UnlockPrice];
+  }
 }
+
 function getModuleTerm(moduleData) {
-  return moduleData.data.map(([price, term]) => term);
+  if (Array.isArray(moduleData.UnlockPrice)) {
+    return moduleData.UnlockTime.map((term) => +term);
+  } else {
+    return [moduleData.UnlockTime];
+  }
 }
 
 function renderResult(state) {

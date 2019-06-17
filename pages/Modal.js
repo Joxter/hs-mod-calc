@@ -33,7 +33,7 @@ cancelBtn.addEventListener('click', () => {
 });
 
 function setSelectData(moduleData, selected) {
-  const moduleMaxLevel = moduleData.data.length;
+  const moduleMaxLevel = Array.isArray(moduleData.UnlockPrice) ? moduleData.UnlockPrice.length : moduleData.UnlockPrice;
 
   rowsEls.forEach((row) => {
     const rowLevel = +row.dataset.level;
