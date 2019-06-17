@@ -28,3 +28,23 @@ export function stringifyTerm(sec) {
 export function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
+
+export function getSumModuleTimeAndPrice(moduleData, level) {
+    const result = [];
+
+    [`UnlockTime`, `UnlockPrice`].forEach((field) => {
+        if (Array.isArray(moduleData[field])) {
+            result.push(getSumFirst(moduleData[field], level));
+        } else {
+            result.push(+moduleData[field]);
+        }
+    });
+
+    return result;
+
+    function getSumFirst(arr, n) {
+        n = n || 0;
+        return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
+    }
+}
+

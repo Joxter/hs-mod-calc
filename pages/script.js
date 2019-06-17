@@ -3,7 +3,7 @@ import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
 import { modulesData, allModuleKeys } from './moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
-import { stringifyTerm, numberWithCommas } from './utils';
+import { stringifyTerm, numberWithCommas, getSumModuleTimeAndPrice } from './utils';
 
 const modules = document.querySelector('.modules');
 
@@ -261,15 +261,12 @@ function renderResult(state) {
   Object.keys(state).forEach((moduleId) => {
     const userModuleData = state[moduleId];
 
-    const currentPrice = getSumFirst(getModulePrices(modulesData[moduleId]), userModuleData.current);
-    const targetPrice = getSumFirst(getModulePrices(modulesData[moduleId]), userModuleData.target);
+    const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(modulesData[moduleId], userModuleData.current);
+    const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(modulesData[moduleId], userModuleData.target);
 
     if (targetPrice > currentPrice) {
       money += targetPrice - currentPrice;
     }
-
-    const currentTerm = getSumFirst(getModuleTerm(modulesData[moduleId]), userModuleData.current);
-    const targetTerm = getSumFirst(getModuleTerm(modulesData[moduleId]), userModuleData.target);
 
     if (targetTerm > currentTerm) {
       term += targetTerm - currentTerm;
@@ -282,11 +279,6 @@ function renderResult(state) {
   resultCreditSpan.innerHTML = money ? `${numberWithCommas(money)} (${numberWithCommas(moneyPerDay)} credit/day)` : `-`;
 
   resultDurationSpan.innerHTML = termString || `-`;
-
-  function getSumFirst(arr, n) {
-    n = n || 0;
-    return arr.filter((item, i) => i < n).reduce((acc, item) => acc + +item, 0);
-  }
 }
 
 function updateButtons(modulesData) {
