@@ -22,9 +22,9 @@ block script
 block content
   header
     h1 Module calculator
-      span.beta (beta)
   div.result
     h2 Result
+      button.btn.btn--light.reset-btn Reset
     p.result-credit Credit:&nbsp;
       span.value
     p.result-duration Duration:&nbsp;
@@ -90,6 +90,9 @@ block content
                   label
                     input(type='radio', name='to', value=i)
                     span!= i+'&nbsp;'
+        p.module-form__result Module result
+          br
+          span.module-form__result-val
         .module-form__buttons
           button.btn.btn--cancel Cancel
           button.btn.btn--ok Ok

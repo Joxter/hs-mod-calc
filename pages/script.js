@@ -37,6 +37,17 @@ function main() {
   initAutosaveCB();
   initShareLink();
   initModal();
+  initResetButton();
+}
+
+function initResetButton() {
+  const button = document.querySelector('.reset-btn');
+
+  button.addEventListener(`click`, () => {
+    modulesStore.set(() => {
+      return getCleanState();
+    });
+  });
 }
 
 function initAutosaveCB() {
