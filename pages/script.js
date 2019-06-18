@@ -1,7 +1,7 @@
 import { save, get } from './localStorageUtils';
 import { optionsStore, modalStore, modulesStore } from './Model';
 import Modal from './Modal';
-import { modulesData, allModuleKeys } from './moduleData';
+import { modulesData, allModuleKeys } from '../data/moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
 import { stringifyTerm, numberWithCommas, getSumModuleTimeAndPrice } from './utils';
 
@@ -101,7 +101,7 @@ function initModal() {
     }
 
     Modal.open({
-      moduleData: modulesData[moduleId],
+      moduleId,
       selected: {
         from: currentLevel,
         to: targetLevel,
@@ -249,22 +249,6 @@ function isSameModules(modulesA, modulesB) {
   return aStr.currentStr === bStr.currentStr && aStr.targetStr === bStr.targetStr;
 }
 
-function getModulePrices(moduleData) {
-  if (Array.isArray(moduleData.UnlockPrice)) {
-    return moduleData.UnlockPrice.map((price) => +price);
-  } else {
-    return [moduleData.UnlockPrice];
-  }
-}
-
-function getModuleTerm(moduleData) {
-  if (Array.isArray(moduleData.UnlockPrice)) {
-    return moduleData.UnlockTime.map((term) => +term);
-  } else {
-    return [moduleData.UnlockTime];
-  }
-}
-
 function renderResult(state) {
   let term = 0;
   let money = 0;
@@ -272,8 +256,8 @@ function renderResult(state) {
   Object.keys(state).forEach((moduleId) => {
     const userModuleData = state[moduleId];
 
-    const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(modulesData[moduleId], userModuleData.current);
-    const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(modulesData[moduleId], userModuleData.target);
+    const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, userModuleData.current);
+    const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, userModuleData.target);
 
     if (targetPrice > currentPrice) {
       money += targetPrice - currentPrice;

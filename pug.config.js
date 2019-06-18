@@ -1,5 +1,5 @@
-const modulesData = require("./pages/moduleData").modulesData;
-const modulesByTypes = require("./pages/moduleData").modulesByTypes;
+const modulesData = require("./data/moduleData").modulesData;
+const modulesByTypes = require("./data/moduleData").modulesByTypes;
 
 function getModuleByType(modulesData, moduleIds) {
   return moduleIds.map(moduleId => modulesData[moduleId]);

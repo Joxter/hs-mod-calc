@@ -5,7 +5,7 @@ var prettier = require('prettier');
 var csv2json = require('csv2json');
 
 const tempJsonFileName = './raw_data/modules.json';
-const outputFileName = './pages/moduleData.js';
+const outputFileName = './data/moduleData.js';
 
 fs.createReadStream('./raw_data/modules.csv')
   .pipe(csv2json({}))

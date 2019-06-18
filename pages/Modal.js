@@ -1,4 +1,5 @@
 import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm } from './utils';
+import { getModuleName, getModuleMaxLevel } from '../data/selectors';
 
 const modal = document.querySelector('.modal');
 
@@ -48,9 +49,9 @@ function getCurrentRadioValues() {
 
 let currentModuleData = null; // стыдных хак, но хочется побыстрее сделать
 
-function setSelectData(moduleData, selected) {
-  currentModuleData = moduleData;
-  const moduleMaxLevel = Array.isArray(moduleData.UnlockPrice) ? moduleData.UnlockPrice.length : moduleData.UnlockPrice;
+function setSelectData(moduleId, selected) {
+  currentModuleData = moduleId;
+  const moduleMaxLevel = getModuleMaxLevel(moduleId);
 
   rowsEls.forEach((row) => {
     const rowLevel = +row.dataset.level;
@@ -62,24 +63,24 @@ function setSelectData(moduleData, selected) {
     toInput.checked = rowLevel == selected.to;
   });
 
-  title.innerHTML = moduleData.eng || `-`;
+  title.innerHTML = getModuleName(moduleId) || `-`;
 
   // неприятный хак, но пока других идей нет
-  const iconBG = document.querySelector(`[data-module-id="${moduleData.id}"] .module__icon`).getAttribute('style');
+  const iconBG = document.querySelector(`[data-module-id="${moduleId}"] .module__icon`).getAttribute('style');
   icon.setAttribute('style', iconBG);
 
   renderTimeAndPrice();
 }
 
-function renderTimeAndPrice(moduleData = currentModuleData) {
-  if (!moduleData) {
+function renderTimeAndPrice(moduleId = currentModuleData) {
+  if (!moduleId) {
     moduleResultSpan.innerHTML = `error`;
     return;
   }
 
   const [from, to] = getCurrentRadioValues();
-  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleData, from);
-  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleData, to);
+  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, from);
+  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, to);
 
   let term = 0;
   let money = 0;
@@ -104,8 +105,8 @@ function renderTimeAndPrice(moduleData = currentModuleData) {
 }
 
 const Modal = {
-  open({ moduleData, selected, onOk, onCancel }) {
-    setSelectData(moduleData, selected);
+  open({ moduleId, selected, onOk, onCancel }) {
+    setSelectData(moduleId, selected);
     modal.style.display = 'block';
     modal.scrollTop = 0;
 
