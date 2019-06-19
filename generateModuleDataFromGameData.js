@@ -1,6 +1,7 @@
 var fs = require('fs');
 var someHumanData = require('./someHumanData').someHumanData;
 var modulesByTypes = require('./someHumanData').modulesByTypes;
+var specialModuleData = require('./someHumanData').specialModuleData;
 var prettier = require('prettier');
 var csv2json = require('csv2json');
 
@@ -16,8 +17,9 @@ fs.createReadStream('./raw_data/modules.csv')
     const modulesDataRaw = JSON.parse(file);
 
     let modulesData = getModuleInfo(modulesDataRaw);
+    let fullModulesData = addSpecialModulesData(modulesData, specialModuleData);
 
-    saveToFile(outputFileName, modulesData);
+    saveToFile(outputFileName, fullModulesData);
     fs.unlinkSync(tempJsonFileName);
   });
 
@@ -113,6 +115,16 @@ function sepatareScallable(colNames, data) {
   return dataByName;
 }
 
+function addSpecialModulesData(modulesData, specData) {
+  modulesData = { ...modulesData };
+
+  Object.keys(specData).forEach((key) => {
+    modulesData[key] = specData[key];
+  });
+
+  return modulesData;
+}
+
 function getModuleInfo(modulesData) {
   let modulesInfo = {};
 
@@ -133,6 +145,8 @@ function getModuleInfo(modulesData) {
     'WeaponEffectType',
     'ScaleEffectsWithZoom',
     'AllowedStarTypes',
+    'DoNotAward',
+    'TeleportToTradeStation',
   ];
 
   modulesData.forEach((modData) => {
@@ -150,18 +164,21 @@ function getModuleInfo(modulesData) {
         eng: someHumanData[currentName].eng,
         id: currentName,
         colNames: currentMatterKeys,
+        maxLevel: 0,
         data: [],
-        options: [],
       };
     }
 
     modulesInfo[currentName].data.push(getValsByKeys(modData, currentMatterKeys));
+    modulesInfo[currentName].maxLevel++;
   });
 
   Object.keys(modulesInfo).forEach((key) => {
+    console.log(key, modulesInfo[key].maxLevel);
     modulesInfo[key] = {
       eng: modulesInfo[key].eng,
       id: modulesInfo[key].id,
+      maxLevel: modulesInfo[key].maxLevel + ``,
       ...sepatareScallable(modulesInfo[key].colNames, modulesInfo[key].data),
     };
   });

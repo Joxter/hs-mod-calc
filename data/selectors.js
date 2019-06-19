@@ -3,34 +3,20 @@ import { modulesData } from './moduleData';
 export function getModulePrices(key) {
   const raw = modulesData[key].UnlockPrice;
 
-  if (Array.isArray(raw)) {
-    return raw.map((price) => +price);
-  } else {
-    return [+raw];
-  }
+  return raw.map((price) => +price);
 }
 
 export function getModuleTerms(key) {
   const raw = modulesData[key].UnlockTime;
 
-  if (Array.isArray(raw)) {
-    return raw.map((time) => +time);
-  } else {
-    return [+raw];
-  }
+  return raw.map((time) => +time);
 }
 
 export function getModuleName(key) {
-    return modulesData[key].eng;
+  return modulesData[key].eng;
 }
 
 export function getModuleMaxLevel(key) {
-    const raw = modulesData[key].UnlockPrice;
-
-    if (Array.isArray(raw)) {
-        return raw.length;
-    } else {
-        return 1;
-    }
+  console.log(+modulesData[key].maxLevel);
+  return +modulesData[key].maxLevel;
 }
-
