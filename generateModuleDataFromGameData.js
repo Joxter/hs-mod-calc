@@ -147,6 +147,7 @@ function getModuleInfo(modulesData) {
     'AllowedStarTypes',
     'DoNotAward',
     'TeleportToTradeStation',
+    'MaxImpulse',
   ];
 
   modulesData.forEach((modData) => {
