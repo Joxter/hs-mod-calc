@@ -88,31 +88,18 @@ function getNonEmptyString(obj) {
   return cleanObj;
 }
 
-function getValsByKeys(obj, keys) {
-  const res = keys.map((key) => obj[key]);
-  return res;
-}
+function squooshNonArrays(moduleData) {
+  const newModuleData = {};
 
-function sepatareScallable(colNames, data) {
-  const dataByName = {};
-
-  colNames.forEach((name, i) => {
-    dataByName[colNames[i]] = [];
-  });
-
-  data.forEach((dataRow) => {
-    colNames.forEach((name, i) => {
-      dataByName[name].push(dataRow[i]);
-    });
-  });
-
-  colNames.forEach((name, i) => {
-    if (dataByName[name][1] === '' || dataByName[name].length === 1) {
-      dataByName[name] = dataByName[name][0];
+  Object.keys(moduleData).forEach((key) => {
+    if (moduleData[key][1] === '' || moduleData[key].length === 1) {
+      newModuleData[key] = moduleData[key][0];
+    } else {
+      newModuleData[key] = moduleData[key];
     }
   });
 
-  return dataByName;
+  return newModuleData;
 }
 
 function addSpecialModulesData(modulesData, specData) {
@@ -158,30 +145,27 @@ function getModuleInfo(modulesData) {
     if (modData.Name && currentName !== modData.Name) {
       currentName = modData.Name;
       currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
-    }
 
-    if (!modulesInfo[currentName]) {
       modulesInfo[currentName] = {
         eng: someHumanData[currentName].eng,
         id: currentName,
-        colNames: currentMatterKeys,
         maxLevel: 0,
-        data: [],
       };
+
+      currentMatterKeys.forEach((key) => {
+        modulesInfo[currentName][key] = [];
+      });
     }
 
-    modulesInfo[currentName].data.push(getValsByKeys(modData, currentMatterKeys));
     modulesInfo[currentName].maxLevel++;
+
+    currentMatterKeys.forEach((key) => {
+      modulesInfo[currentName][key].push(modData[key]);
+    });
   });
 
   Object.keys(modulesInfo).forEach((key) => {
-    console.log(key, modulesInfo[key].maxLevel);
-    modulesInfo[key] = {
-      eng: modulesInfo[key].eng,
-      id: modulesInfo[key].id,
-      maxLevel: modulesInfo[key].maxLevel + ``,
-      ...sepatareScallable(modulesInfo[key].colNames, modulesInfo[key].data),
-    };
+    modulesInfo[key] = squooshNonArrays(modulesInfo[key]);
   });
 
   return modulesInfo;
