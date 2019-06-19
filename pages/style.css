@@ -5,8 +5,8 @@
 }
 
 .result h2 button {
-    font-size: 14px;
-    transform: translate(10px, -8px);
+  font-size: 14px;
+  transform: translate(10px, -8px);
 }
 
 .save-and-share {
@@ -233,6 +233,19 @@ h2 {
   font-size: 22px;
   line-height: 1;
   flex-direction: row-reverse;
+}
+
+.module-form__params {
+  font-size: 0.8em;
+}
+
+.param-row__label {
+  margin-bottom: 0;
+}
+
+.param-row__value {
+  text-align: right;
+  margin: 0;
 }
 
 .levels-table input:checked + span {

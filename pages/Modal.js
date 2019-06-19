@@ -1,10 +1,11 @@
 import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm } from './utils';
-import { getModuleName, getModuleMaxLevel } from '../data/selectors';
+import { getModuleName, getModuleMaxLevel, getModuleLevelParams, getModuleParamLabel } from '../data/selectors';
 
 const modal = document.querySelector('.modal');
 
 const title = modal.querySelector('.module-form__title');
 const icon = modal.querySelector('.module-form__icon');
+const moduleParams = modal.querySelector('.module-form__params');
 
 const okBtn = modal.querySelector('.btn--ok');
 const cancelBtn = modal.querySelector('.btn--cancel');
@@ -70,6 +71,34 @@ function setSelectData(moduleId, selected) {
   icon.setAttribute('style', iconBG);
 
   renderTimeAndPrice();
+  renderParamsTable(getModuleLevelParams(moduleId, selected.from), getModuleLevelParams(moduleId, selected.to));
+}
+
+function renderParamsTable(from, to) {
+  let html = ``;
+
+  Object.keys(from).forEach((key) => {
+    if (key === `UnlockPrice` || key === `UnlockTime`) {
+      return;
+    }
+
+    const label = getModuleParamLabel(key);
+    let fromVal = from[key];
+    let toVal = to[key];
+    let deltaVal = toVal - fromVal;
+
+    const valString = deltaVal ? `${fromVal} -> ${toVal} (+${deltaVal})` : `${toVal}`;
+
+    html += `
+    <div class='param-row'>
+      <p class='param-row__label'>${label}</p>
+      <p class='param-row__value'>${valString}</p>
+    </div>`;
+  });
+
+  html += `</table>`;
+
+  moduleParams.innerHTML = html;
 }
 
 function renderTimeAndPrice(moduleId = currentModuleData) {
