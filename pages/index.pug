@@ -75,21 +75,19 @@ block content
         .module-form__header
           span.module-form__icon
           h2.module-form__title -
-        table.levels-table
-          tbody
-            tr
-              th Current level
-              th Target level
+        div.levels-table
+          p Current level
+          div.levels-table__row.levels-table__row--from
             each i in [0,1,2,3,4,5,6,7,8,9,10,11]
-              tr(data-level=i)
-                td
-                  label
-                    input(type='radio', name='from', value=i)
-                    span!= i+'&nbsp;'
-                td
-                  label
-                    input(type='radio', name='to', value=i)
-                    span!= i+'&nbsp;'
+              label
+                input(type='radio', name='from', value=i)
+                span!= i
+          p Target level
+          div.levels-table__row.levels-table__row--to
+            each i in [0,1,2,3,4,5,6,7,8,9,10,11]
+              label
+                input(type='radio', name='to', value=i)
+                span!= i
         p.module-form__result Module result
           br
           span.module-form__result-val

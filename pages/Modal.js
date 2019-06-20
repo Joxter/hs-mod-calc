@@ -12,7 +12,6 @@ const okBtn = modal.querySelector('.btn--ok');
 const cancelBtn = modal.querySelector('.btn--cancel');
 
 const tableEl = modal.querySelector('.levels-table');
-const rowsEls = modal.querySelectorAll('tr[data-level]');
 const moduleResultSpan = modal.querySelector('.module-form__result-val');
 
 modal.addEventListener('click', (event) => {
@@ -56,33 +55,34 @@ function setTitleAndIcon({ moduleId }) {
   }
 }
 
-function updateRadio(name, value) {
-  rowsEls.forEach((row) => {
-    const rowLevel = +row.dataset.level;
-
-    const toInput = row.querySelector(`input[name=${name}]`);
-    toInput.checked = rowLevel == value;
+function updateRadio(parent, name, value) {
+  parent.querySelectorAll(`input`).forEach((input) => {
+    input.checked = input.value == value;
   });
 }
 
 function updateCurrentRadio(state) {
-  updateRadio(`from`, state.currentLevel || 0);
+  updateRadio(tableEl.querySelector(`.levels-table__row--from`), `from`, state.currentLevel || 0);
 }
 
 function updateTargetRadio(state) {
-  updateRadio(`to`, state.targetLevel || 0);
+  updateRadio(tableEl.querySelector(`.levels-table__row--to`), `to`, state.targetLevel || 0);
 }
 
 export function toggleLevelRows(state) {
   const moduleId = state.moduleId;
 
-  if (moduleId) {
-    const moduleMaxLevel = getModuleMaxLevel(moduleId);
+  if (!moduleId) {
+    return;
+  }
 
-    rowsEls.forEach((row) => {
-      const rowLevel = +row.dataset.level;
-      row.hidden = rowLevel > moduleMaxLevel;
-    });
+  const moduleMaxLevel = getModuleMaxLevel(moduleId);
+
+  tableEl.querySelectorAll(`.levels-table__row--from label`).forEach(toggleLabel);
+  tableEl.querySelectorAll(`.levels-table__row--to label`).forEach(toggleLabel);
+
+  function toggleLabel(label, level) {
+    label.style.display = level <= moduleMaxLevel ? `` : `none`;
   }
 }
 

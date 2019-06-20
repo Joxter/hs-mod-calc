@@ -218,21 +218,46 @@ h2 {
 }
 
 .levels-table {
-  text-align: right;
-  border-collapse: collapse;
-  margin-top: 10px;
 }
 
-.levels-table tr:nth-child(even) {
-  background-color: #252b2d;
+.levels-table p {
+  margin-bottom: 5px;
+}
+
+.levels-table__row {
+  display: flex;
+  margin: 0 -10px;
+}
+
+.levels-table__row input {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
 }
 
 .levels-table label {
   display: flex;
-  font-weight: bold;
-  font-size: 22px;
-  line-height: 1;
-  flex-direction: row-reverse;
+  flex: 0 1 50px;
+  margin-left: 2px;
+}
+
+.levels-table__row span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 25px;
+  font-size: 16px;
+  color: #9fe5fb;
+  box-shadow: inset 0 0 1px 1px rgba(159, 229, 251, 0.6);
+  border-radius: 2px;
+}
+
+.levels-table input:checked + span {
+  color: #101415;
+  background-color: #9fe5fb;
 }
 
 .module-form__params {
@@ -246,15 +271,4 @@ h2 {
 .param-row__value {
   text-align: right;
   margin: 0;
-}
-
-.levels-table input:checked + span {
-  color: gold;
-}
-
-.levels-table th,
-.levels-table td {
-  font-weight: normal;
-  border: 0;
-  padding: 3px 10px 3px 0;
 }
