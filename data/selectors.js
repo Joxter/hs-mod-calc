@@ -80,7 +80,11 @@ export function getModuleLevelParams(key, level) {
   Object.keys(allModuleInfo)
     .filter((paramKey) => Array.isArray(allModuleInfo[paramKey]))
     .forEach((paramKey) => {
-      levelParams[paramKey] = allModuleInfo[paramKey][Math.max(level - 1, 0)];
+      if (level === 0) {
+        levelParams[paramKey] = 0;
+      } else {
+        levelParams[paramKey] = allModuleInfo[paramKey][level - 1];
+      }
     });
 
   return levelParams;

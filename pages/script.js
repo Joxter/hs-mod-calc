@@ -1,6 +1,6 @@
 import { save, get } from './localStorageUtils';
 import { optionsStore, modalStore, modulesStore } from './Model';
-import Modal from './Modal';
+import Modal, { initModal } from './Modal';
 import { modulesData, allModuleKeys } from '../data/moduleData';
 import { parseModules, stringifyModules, parseQueryString } from './urlModules';
 import { stringifyTerm, numberWithCommas, getSumModuleTimeAndPrice } from './utils';
@@ -36,7 +36,7 @@ function main() {
 
   initAutosaveCB();
   initShareLink();
-  initModal();
+  initModal2();
   initResetButton();
 }
 
@@ -93,7 +93,9 @@ function initShareLink() {
   });
 }
 
-function initModal() {
+function initModal2() {
+  initModal();
+
   modalStore.watch(`moduleId`, ({ moduleId, currentLevel, targetLevel }) => {
     if (!moduleId) {
       Modal.close();
@@ -101,11 +103,6 @@ function initModal() {
     }
 
     Modal.open({
-      moduleId,
-      selected: {
-        from: currentLevel,
-        to: targetLevel,
-      },
       onCancel: () => {
         modalStore.set(() => ({
           moduleId: null,

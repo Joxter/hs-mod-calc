@@ -1,5 +1,6 @@
 import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm } from './utils';
 import { getModuleName, getModuleMaxLevel, getModuleLevelParams, getModuleParamLabel } from '../data/selectors';
+import { modalStore, changeFrom, changeTo } from './Model';
 
 const modal = document.querySelector('.modal');
 
@@ -37,41 +38,52 @@ cancelBtn.addEventListener('click', () => {
   cancelButtonHandler && cancelButtonHandler();
 });
 
-tableEl.addEventListener('change', () => {
-  renderTimeAndPrice();
+tableEl.addEventListener('change', (event) => {
+  if (event.target.name === `from`) {
+    changeFrom(+event.target.value);
+  } else {
+    changeTo(+event.target.value);
+  }
 });
 
-function getCurrentRadioValues() {
-  const fromInput = tableEl.querySelector('input[name=from]:checked');
-  const toInput = tableEl.querySelector('input[name=to]:checked');
+function setTitleAndIcon({ moduleId }) {
+  if (moduleId) {
+    title.innerHTML = getModuleName(moduleId) || `-`;
 
-  return [+fromInput.value, +toInput.value];
+    // неприятный хак, но пока других идей нет
+    const iconBG = document.querySelector(`[data-module-id="${moduleId}"] .module__icon`).getAttribute('style');
+    icon.setAttribute('style', iconBG);
+  }
 }
 
-let currentModuleData = null; // стыдных хак, но хочется побыстрее сделать
-
-function setSelectData(moduleId, selected) {
-  currentModuleData = moduleId;
-  const moduleMaxLevel = getModuleMaxLevel(moduleId);
-
+function updateRadio(name, value) {
   rowsEls.forEach((row) => {
     const rowLevel = +row.dataset.level;
-    row.hidden = rowLevel > moduleMaxLevel;
 
-    const fromInput = row.querySelector('input[name=from]');
-    const toInput = row.querySelector('input[name=to]');
-    fromInput.checked = rowLevel == selected.from;
-    toInput.checked = rowLevel == selected.to;
+    const toInput = row.querySelector(`input[name=${name}]`);
+    toInput.checked = rowLevel == value;
   });
+}
 
-  title.innerHTML = getModuleName(moduleId) || `-`;
+function updateCurrentRadio(state) {
+  updateRadio(`from`, state.currentLevel || 0);
+}
 
-  // неприятный хак, но пока других идей нет
-  const iconBG = document.querySelector(`[data-module-id="${moduleId}"] .module__icon`).getAttribute('style');
-  icon.setAttribute('style', iconBG);
+function updateTargetRadio(state) {
+  updateRadio(`to`, state.targetLevel || 0);
+}
 
-  renderTimeAndPrice();
-  renderParamsTable(getModuleLevelParams(moduleId, selected.from), getModuleLevelParams(moduleId, selected.to));
+export function toggleLevelRows(state) {
+  const moduleId = state.moduleId;
+
+  if (moduleId) {
+    const moduleMaxLevel = getModuleMaxLevel(moduleId);
+
+    rowsEls.forEach((row) => {
+      const rowLevel = +row.dataset.level;
+      row.hidden = rowLevel > moduleMaxLevel;
+    });
+  }
 }
 
 function renderParamsTable(from, to) {
@@ -101,15 +113,18 @@ function renderParamsTable(from, to) {
   moduleParams.innerHTML = html;
 }
 
-function renderTimeAndPrice(moduleId = currentModuleData) {
+function renderTimeAndPrice(state) {
+  const moduleId = state.moduleId;
+  const currentLevel = state.currentLevel || 0;
+  const targetLevel = state.targetLevel || 0;
+
   if (!moduleId) {
     moduleResultSpan.innerHTML = `error`;
     return;
   }
 
-  const [from, to] = getCurrentRadioValues();
-  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, from);
-  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, to);
+  const [currentTerm, currentPrice] = getSumModuleTimeAndPrice(moduleId, currentLevel);
+  const [targetTerm, targetPrice] = getSumModuleTimeAndPrice(moduleId, targetLevel);
 
   let term = 0;
   let money = 0;
@@ -133,9 +148,29 @@ function renderTimeAndPrice(moduleId = currentModuleData) {
   }
 }
 
+export function initModal() {
+  modalStore.watch(`moduleId`, toggleLevelRows);
+  modalStore.watch(`moduleId`, setTitleAndIcon);
+  modalStore.watch(`targetLevel`, updateTargetRadio);
+  modalStore.watch(`currentLevel`, updateCurrentRadio);
+
+  modalStore.watch(`currentLevel`, renderResults);
+  modalStore.watch(`targetLevel`, renderResults);
+}
+
+function renderResults(state) {
+  const moduleId = state.moduleId;
+  const currentLevel = state.currentLevel || 0;
+  const targetLevel = state.targetLevel || 0;
+
+  if (moduleId) {
+    renderTimeAndPrice(state);
+    renderParamsTable(getModuleLevelParams(moduleId, currentLevel), getModuleLevelParams(moduleId, targetLevel));
+  }
+}
+
 const Modal = {
-  open({ moduleId, selected, onOk, onCancel }) {
-    setSelectData(moduleId, selected);
+  open({ onOk, onCancel }) {
     modal.style.display = 'block';
     modal.scrollTop = 0;
 
@@ -143,7 +178,6 @@ const Modal = {
     cancelButtonHandler = onCancel;
   },
   close() {
-    currentModuleData = null;
     modal.style.display = '';
   },
 };
