@@ -127,8 +127,8 @@ var modulesByTypes = {
     'StrongShield',
     'PassiveShield',
     'MirrorShield',
-    'AreaShield',
     'BlastShield',
+    'AreaShield',
   ],
   weapon: ['WeakBattery', 'Battery', 'Laser', 'MassBattery', 'DualLaser', 'Barrage', 'DartLauncher'],
 };

@@ -1,5 +1,5 @@
-import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm } from './utils';
-import { getModuleName, getModuleMaxLevel, getModuleLevelParams, getModuleParamLabel } from '../data/selectors';
+import { getSumModuleTimeAndPrice, numberWithCommas, stringifyTerm, getLabelAndFormatter } from './utils';
+import { getModuleName, getModuleMaxLevel, getModuleLevelParams } from '../data/selectors';
 import { modalStore, changeFrom, changeTo } from './Model';
 
 const modal = document.querySelector('.modal');
@@ -94,12 +94,16 @@ function renderParamsTable(from, to) {
       return;
     }
 
-    const label = getModuleParamLabel(key);
+    const { label, format } = getLabelAndFormatter(key);
     let fromVal = from[key];
     let toVal = to[key];
     let deltaVal = toVal - fromVal;
 
-    const valString = deltaVal ? `${fromVal} -> ${toVal} (+${deltaVal})` : `${toVal}`;
+    const valString = deltaVal
+      ? `${format(fromVal)} <span class='param-row__delta'>+ ${format(deltaVal)}</span> = ${format(toVal)}`
+      : to
+      ? `${format(toVal)}`
+      : `-`;
 
     html += `
     <div class='param-row'>
@@ -107,8 +111,6 @@ function renderParamsTable(from, to) {
       <p class='param-row__value'>${valString}</p>
     </div>`;
   });
-
-  html += `</table>`;
 
   moduleParams.innerHTML = html;
 }

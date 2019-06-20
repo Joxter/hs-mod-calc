@@ -262,10 +262,16 @@ h2 {
 
 .module-form__params {
   font-size: 0.8em;
+  margin-top: 20px;
 }
 
 .param-row__label {
+  margin-top: 8px;
   margin-bottom: 0;
+}
+
+.param-row__delta {
+  color: gold;
 }
 
 .param-row__value {
