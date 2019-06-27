@@ -58,7 +58,44 @@ h2 {
   font-weight: normal;
 }
 
+.modules {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+@media (min-width: 900px) {
+  .modules {
+    flex-direction: initial;
+    justify-content: space-between;
+  }
+}
+
+@media (min-width: 1300px) {
+  .modules {
+    flex-direction: column;
+    align-content: space-between;
+    max-height: 600px;
+  }
+}
+
 .modules-pack {
+  max-width: 390px;
+  width: 100%;
+}
+
+@media (min-width: 1300px) {
+  .modules-pack {
+    height: 250px;
+  }
+
+  .modules-pack--big {
+    height: 500px;
+  }
+}
+
+.modules-pack__items {
   display: flex;
   flex-wrap: wrap;
 }

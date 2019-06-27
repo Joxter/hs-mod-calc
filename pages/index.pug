@@ -45,30 +45,35 @@ block content
         | Share target modules
       a(target='_blank').share-modules-link.share-modules-link--js
   .modules
-    h2 Trade modules
     section.modules-pack
-      each moduleData in tradeModules
+      h2 Trade modules
+      div.modules-pack__items
+        each moduleData in tradeModules
+          +module(moduleData)
+
+    section.modules-pack
+      h2 Mining modules
+      div.modules-pack__items
+       each moduleData  in miningModules
         +module(moduleData)
 
-    h2 Mining modules
     section.modules-pack
-      each moduleData  in miningModules
-        +module(moduleData)
+      h2 Weapon modules
+      div.modules-pack__items
+        each moduleData  in weaponModules
+          +module(moduleData)
 
-    h2 Weapon modules
     section.modules-pack
-      each moduleData  in weaponModules
-        +module(moduleData)
+      h2 Shield modules
+      div.modules-pack__items
+        each moduleData  in shieldModules
+          +module(moduleData)
 
-    h2 Shield modules
-    section.modules-pack
-      each moduleData  in shieldModules
-        +module(moduleData)
-
-    h2 Support modules
-    section.modules-pack
-      each moduleData  in supportModules
-        +module(moduleData)
+    section.modules-pack.modules-pack--big
+      h2 Support modules
+      div.modules-pack__items
+        each moduleData  in supportModules
+          +module(moduleData)
   .modal
     .modal-container
       .module-form
