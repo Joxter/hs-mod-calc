@@ -1,7 +1,19 @@
 @import './layout.css';
 
+@media (min-width: 900px) {
+  .result-and-share {
+    display: flex;
+  }
+}
+
 .result {
   padding: 0 10px;
+  max-width: 390px;
+  width: 100%;
+}
+
+.result h2 {
+  margin-top: 0;
 }
 
 .result h2 button {
@@ -13,6 +25,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  max-width: 390px;
+  padding: 0 10px;
+  width: 100%;
 }
 
 .save-and-share > * {
@@ -36,11 +51,16 @@
 }
 
 .share-modules-link {
+  margin-top: 0;
+}
+
+.share-modules-link a {
   color: inherit;
   font-size: 11px;
   word-break: break-all;
   margin-top: 10px;
   display: inline-block;
+  color: #9fe5fb;
 }
 
 .share-modules-link:empty {
@@ -67,14 +87,14 @@ h2 {
 
 @media (min-width: 900px) {
   .modules {
-    flex-direction: initial;
+    flex-direction: column;
     justify-content: space-between;
+    max-height: calc(60px * 11);
   }
 }
 
 @media (min-width: 1300px) {
   .modules {
-    flex-direction: column;
     align-content: space-between;
     max-height: 600px;
   }
@@ -85,13 +105,20 @@ h2 {
   width: 100%;
 }
 
+.modules-pack h2 {
+  line-height: 60px;
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+}
+
 @media (min-width: 1300px) {
   .modules-pack {
-    height: 250px;
+    height: calc(60px * 4);
   }
 
   .modules-pack--big {
-    height: 500px;
+    height: calc(60px * 8);
   }
 }
 

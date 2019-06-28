@@ -65,38 +65,24 @@ function initAutosaveCB() {
 }
 
 function initShareLink() {
-  optionsStore.bindCb(document.querySelector('.share-current--js'), ({ isShareCurrent }) => ({
-    isShareCurrent: !isShareCurrent,
-  }));
-  optionsStore.bindCb(document.querySelector('.share-target--js'), ({ isShareTarget }) => ({
-    isShareTarget: !isShareTarget,
-  }));
-
-  function renderLink(state) {
+  function renderLink() {
     const shareLink = document.querySelector('.share-modules-link--js');
 
-    const link =
-      state.isShareCurrent || state.isShareTarget
-        ? getLink({
-            isCurrent: state.isShareCurrent,
-            isTarget: state.isShareTarget,
-          })
-        : ``;
+    const link = getLink();
 
     shareLink.innerHTML = link;
     shareLink.href = link;
   }
 
-  optionsStore.watch(`*`, renderLink);
   modulesStore.watch(`*`, () => {
-    renderLink(optionsStore.getState());
+    renderLink();
   });
 }
 
 function initModal2() {
   initModal();
 
-  modalStore.watch(`moduleId`, ({ moduleId, currentLevel, targetLevel }) => {
+  modalStore.watch(`moduleId`, ({ moduleId }) => {
     if (!moduleId) {
       Modal.close();
       return;
@@ -123,26 +109,13 @@ function initModal2() {
   });
 }
 
-function getLink({ isCurrent, isTarget }) {
-  let newUrl = `${location.origin}${location.pathname}`;
-  const params = [];
-  const { currentStr, targetStr } = stringifyModules(allModuleKeys, modulesStore.getState());
+function getLink() {
+  const { currentStr } = stringifyModules(allModuleKeys, modulesStore.getState());
 
-  if (isCurrent) {
-    params.push(`${CURRENT_URL_RAPAM}=${currentStr}`);
-  }
+  const url = `${location.origin}${location.pathname}`;
+  const paramsStr = `${CURRENT_URL_RAPAM}=${currentStr}`;
 
-  if (isTarget) {
-    params.push(`${TARGET_URL_RAPAM}=${targetStr}`);
-  }
-
-  const paramsStr = params.join(`&`);
-
-  if (paramsStr) {
-    newUrl += `?${paramsStr}`;
-  }
-
-  return newUrl;
+  return `${url}?${paramsStr}`;
 }
 
 function autosaveModules(modules) {

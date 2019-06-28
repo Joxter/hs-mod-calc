@@ -22,13 +22,14 @@ block script
 block content
   header
     h1 Module calculator
-  div.result
-    h2 Result
-      button.btn.btn--light.reset-btn Reset
-    p.result-credit Credit:&nbsp;
-      span.value
-    p.result-duration Duration:&nbsp;
-      span.value
+  div.result-and-share
+    div.result
+      h2 Result
+        button.btn.btn--light.reset-btn Reset
+      p.result-credit Credit:&nbsp;
+        span.value
+      p.result-duration Duration:&nbsp;
+        span.value
     div.save-and-share
       h2 Save and share
       label
@@ -37,13 +38,9 @@ block content
       div
         button.btn.btn--ok.save-button--js Save modules
         button.btn.btn--ok.load-button--js Load modules
-      label
-        input.share-current--js(type='checkbox', name='current')
-        | Share current modules
-      label
-        input.share-target--js(type='checkbox', name='target')
-        | Share target modules
-      a(target='_blank').share-modules-link.share-modules-link--js
+      p.share-modules-link Share current modules link:
+        |
+        a(target='_blank').share-modules-link--js
   .modules
     section.modules-pack
       h2 Trade modules

@@ -17,7 +17,6 @@ p {
 }
 
 header {
-  max-width: 400px;
   padding: 0 10px;
 }
 
@@ -28,15 +27,15 @@ header {
 }
 
 @media (min-width: 900px) {
-    .container {
-        max-width: 800px;
-    }
+  .container {
+    max-width: 800px;
+  }
 }
 
 @media (min-width: 1300px) {
-    .container {
-        max-width: 1200px;
-    }
+  .container {
+    max-width: 1200px;
+  }
 }
 
 h1 {

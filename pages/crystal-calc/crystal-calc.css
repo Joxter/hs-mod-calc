@@ -4,14 +4,20 @@
   font-size: 16px;
 }
 
+@media (min-width: 900px) {
+  .change-desk {
+    font-size: 1.2em;
+  }
+}
+
 .change-desk__row {
   display: flex;
   margin-bottom: 10px;
-    padding: 5px 20px 0;
+  padding: 5px calc(100% - 380px) 0 20px;
 }
 
 .change-desk__row--in {
-  padding-top: 5px;
+  padding-top: 10px;
   border-top: 1px solid #555;
 }
 
@@ -24,7 +30,7 @@
 }
 
 .result {
-    padding: 0 10px;
+  padding: 0 10px;
   color: gold;
 }
 
