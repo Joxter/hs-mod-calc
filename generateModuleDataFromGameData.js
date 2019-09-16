@@ -207,6 +207,8 @@ function getModuleInfo(modulesData) {
       return;
     }
 
+    // console.log(modData);
+
     if (modData.Name && currentName !== modData.Name) {
       currentName = modData.Name;
       currentMatterKeys = Object.keys(removeFields(getNonEmptyString(modData), trash));
