@@ -22,12 +22,9 @@ jobs:
       env:
         CI: true
 
-    -
-      name: Deploy
-      if: success()
-      uses: crazy-max/ghaction-github-pages@v1
+    - name: Build and Deploy
+      uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
-        target_branch: master
-        build_dir: ./docs
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: master # The branch the action should deploy to.
+        FOLDER: docs # The folder the action should deploy.
