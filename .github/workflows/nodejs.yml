@@ -22,10 +22,12 @@ jobs:
       env:
         CI: true
 
-    - name: Publish generated content to GitHub Pages
-      uses: tsunematsu21/actions-publish-gh-pages@v1.0.0
+    -
+      name: Deploy
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1
       with:
-        dir: dist
-        branch: master
-        token: ${{ secrets.ACCESS_TOKEN }}
-
+        target_branch: gh-pages
+        build_dir: public
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
