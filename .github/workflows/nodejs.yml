@@ -15,9 +15,12 @@ jobs:
         npm install
         npm run-script build
 
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+    -
+      name: Deploy
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v1
       with:
+        target_branch: gh-pages
+        build_dir: .
+      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: master
-        FOLDER: .
