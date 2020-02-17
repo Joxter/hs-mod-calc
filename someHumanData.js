@@ -137,7 +137,7 @@ var modulesByTypes = {
 
 const specialModuleData = {
   WeakBattery: {
-    eng: 'Weak Battery',
+    engName: 'Weak Battery',
     id: 'WeakBattery',
     maxLevel: '1',
     Name: 'WeakBattery',
@@ -154,7 +154,7 @@ const specialModuleData = {
     BCCost: ['0'],
   },
   Recall: {
-    eng: 'Recall',
+    engName: 'Recall',
     id: 'Recall',
     maxLevel: '1',
     Name: 'Recall',
@@ -168,10 +168,9 @@ const specialModuleData = {
     ActivationDelay: ['60'],
     ActivationFuelCost: ['500'],
     BCCost: ['20000'],
-    WhiteStarScore: ['0'],
   },
   Sanctuary: {
-    eng: 'Sanctuary',
+    engName: 'Sanctuary',
     id: 'Sanctuary',
     maxLevel: '1',
     Name: 'Sanctuary',
@@ -185,7 +184,6 @@ const specialModuleData = {
     JumpToSafety: '1',
     FuelUseIncrease: ['10'],
     BCCost: ['5000'],
-    BSScore: ['1000'],
   },
 };
 

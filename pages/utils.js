@@ -60,12 +60,12 @@ export function getStatFormatter(key) {
     `IncreaseSectorHydroPct`,
     `HydroUploadPct`,
     `SpeedIncreasePerShipment`,
-    `SalvageHullPercent`,
     `IncreaseSectorHydroPct`,
   ];
   const x10multFields = [`TimeWarpFactor`];
   const speedFields = [`Speed`];
   const miningSpeedFields = [`MiningSpeed`];
+  const salvageHullPercentFields = [`SalvageHullPercent`];
 
   let format = numberWithCommas;
 
@@ -83,12 +83,20 @@ export function getStatFormatter(key) {
     format = (_) => `${_ / 5}/100 AU`;
   } else if (moneyFields.indexOf(key) > -1) {
     format = (_) => `${numberWithCommas(_)} cr`;
+  } else if (salvageHullPercentFields.indexOf(key) > -1) {
+    format = (_) => {
+      if (!_) {
+        return 0;
+      }
+      const [ val ] = _.split('!');
+      return `${+val}%`
+    };
   } else if (auFields.indexOf(key) > -1) {
     format = (_) => `${_ / 10}AU`;
   } else if (speedFields.indexOf(key) > -1) {
     format = (_) => `${_ * 6}AU/m`;
   } else if (x10multFields.indexOf(key) > -1) {
-    format = (_) => `${_ / 10}x`;
+    format = (_) => `${_ / 100}x`;
   } else if (percentFields.indexOf(key) > -1) {
     format = (_) => `${_}%`;
   }
