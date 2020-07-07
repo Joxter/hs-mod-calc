@@ -71,6 +71,7 @@ var someHumanData = {
   Bond: { eng: `Bond` },
   AlphaDrone: { eng: `Alpha Drone` },
   OmegaRocket: { eng: `Omega Rocket` },
+  RemoteBomb: { eng: `Remote bomb` },
 };
 
 var modulesByTypes = {
@@ -122,6 +123,7 @@ var modulesByTypes = {
     'AlphaDrone',
     'Suspend',
     'OmegaRocket',
+    'RemoteBomb',
   ],
   shield: [
     'WeakShield',

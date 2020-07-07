@@ -330,16 +330,16 @@ h2 {
   margin-top: 20px;
 }
 
-.param-row__label {
-  margin-top: 8px;
-  margin-bottom: 0;
-}
-
 .param-row__delta {
   color: gold;
 }
 
 .param-row__value {
   text-align: right;
-  margin: 0;
+}
+
+.param-row {
+  display: flex;
+  padding: 2%;
+  justify-content: space-between;
 }

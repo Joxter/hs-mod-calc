@@ -237,8 +237,6 @@ function getModuleInfo(modulesData) {
     'ImpactFX',
     'DestroyedFX',
     'LaunchFX',
-    'BSScore',
-    'WhiteStarScore',
   ];
 
   const matterFields = [`ActivationPrepBS`, `ActivationPrep`, `ActivationPrepWS`];
